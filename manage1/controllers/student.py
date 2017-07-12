@@ -16,7 +16,7 @@ log = logging.getLogger(__name__)
 
 class StudentController(BaseController):
     def index(self):
-        c.users = Session.query(model.Student).all()
+        c.students = Session.query(model.Student).all()
         return render_jinja('/student/index.html')
 
     def show(self, id):

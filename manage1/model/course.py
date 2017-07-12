@@ -9,10 +9,12 @@ class Course(Base):
     __tablename__ = "course"
 
     id = Column(Integer, primary_key=True)
+    code = Column(String(10))
     name = Column(String(100))
     number = Column(Integer)
 
-    def __init__(self, name='', number=0):
+    def __init__(self, code='', name='', number=0):
+        self.code = code
         self.name = name
         self.number = number
 
