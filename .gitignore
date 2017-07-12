@@ -1,5 +1,9 @@
 *.pyc
 *.egg-info
-*.egg
-tests/test_units/cache/
-tests/test_units/session/
+.*.swp
+.cache
+.coverage
+.ropeproject
+.tox
+venv
+docs/_build
