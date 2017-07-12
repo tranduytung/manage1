@@ -1,0 +1,42 @@
+{% extends "/layout/base.html" %}
+{% block title %}Student - Index {% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-4 col-md-offset-2">
+            <a href="{{h.url(controller='student', action='new')}}" class="btn btn-primary">New Student</a>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="center">Name</th>
+                    <th class="center">Email</th>
+                    <th class="center" colspan="3">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in c.users %}
+                    <tr>
+                        <td class="center">{{user.name}}</td>
+                        <td class="center">{{user.email}}</td>
+                        <td><a href="{{h.url(controller='student',action='edit',id=user.id)}}">Edit</a></td>
+                        <td><a href="{{h.url(controller='student',action='show',id=user.id)}}">Show</a></td>
+                        <td>
+                            <a href="{{h.url(controller='student',action='delete',id=user.id)}}"
+                               data-method="delete" onclick="return confirm('Are you sure you want to delete?');">
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+            <div class="text-center">
+            </div>
+        </div>
+    </div>
+{% endblock %}
