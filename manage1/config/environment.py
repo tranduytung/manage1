@@ -50,5 +50,13 @@ def load_environment(global_conf, app_conf):
 
     # CONFIGURATION OPTIONS HERE (note: all config options will override
     # any Pylons config options)
-    
+
+    # Import the jinja components we need
+    from jinja2 import ChoiceLoader, Environment, FileSystemLoader
+    # Create the Jinja Environment
+    config['pylons.app_globals'].jinja2_env = Environment(loader=ChoiceLoader(
+        [FileSystemLoader(path) for path in paths['templates']]))
+    # Jinja's unable to request c's attributes without strict_c
+    config['pylons.strict_c'] = True
+
     return config
