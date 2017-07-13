@@ -3,6 +3,7 @@ import logging
 from pylons import request, response, session, tmpl_context as c, url
 from pylons.controllers.util import abort, redirect
 from pylons.decorators.rest import restrict
+from webhelpers import paginate
 
 import manage1.lib.helpers as h
 from manage1.lib.base import BaseController, render, render_jinja
@@ -17,6 +18,11 @@ log = logging.getLogger(__name__)
 class CourseController(BaseController):
     def index(self):
         c.courses = Session.query(model.Course).all()
+        if request.params.has_key('page'):
+            page = request.params['page']
+        else:
+            page = 1
+        c.courses = paginate.Page(c.courses, page=page, items_per_page=10)
         return render_jinja('/course/index.html')
 
 

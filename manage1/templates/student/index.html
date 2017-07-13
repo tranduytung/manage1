@@ -10,7 +10,7 @@
     <br>
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
-            <table class="table table-bordered">
+            <table class="table table-bordered paginator">
             <thead>
                 <tr>
                     <th class="center">Name</th>
@@ -38,11 +38,12 @@
                             </td>
                         </tr>
                     {% endfor %}
+                    <div >
+                        {{c.students.pager('Page $page: $link_previous $link_next ~4~')}}
+                    </div>
                 {% endif %}
             </tbody>
             </table>
-            <div class="text-center">
-            </div>
         </div>
     </div>
 {% endblock %}

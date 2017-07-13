@@ -46,6 +46,10 @@
                         <td><a href="{{h.url(controller='course',action='show',id=course.id)}}">Show</a></td>
                     </tr>
                 {% endfor %}
+                <div >
+                    {{c.courses.pager('Page $page: $link_previous $link_next ~4~',
+                        code=c.form_result['code'], name=c.form_result['name'])}}
+                </div>
                 {% endif %}
             </tbody>
             </table>

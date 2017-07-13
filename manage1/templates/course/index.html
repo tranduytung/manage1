@@ -40,6 +40,9 @@
                         </td>
                     </tr>
                 {% endfor %}
+                <div >
+                    {{c.courses.pager('Page $page: $link_previous $link_next ~4~')}}
+                </div>
                 {% endif %}
             </tbody>
             </table>
