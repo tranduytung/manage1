@@ -23,6 +23,7 @@ class StudentController(BaseController):
         c.student = Session.query(model.Student).filter_by(id=id).first()
         if not c.student:
             abort(404, '404 Not Found')
+        c.courses = Session.query(model.Course).all()
         return render_jinja('/student/show.html')
 
     def new(self):
@@ -64,7 +65,6 @@ class StudentController(BaseController):
         if not student:
             abort(404, '404 Not Found')
         try:
-            print(request.params)
             form_result = schema.to_python(request.params, c)
         except formencode.validators.Invalid, error:
             c.form_result = error.value

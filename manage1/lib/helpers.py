@@ -10,3 +10,12 @@ from webhelpers.html.tags import *
 from pylons import url
 from webhelpers.pylonslib.flash import Flash as _Flash
 flash = _Flash()
+
+
+def create_students_options(type_list):
+    options = [(ct.id, ct.name+'--'+ ct.email) for ct in type_list]
+    return Options(options)
+
+def create_courses_options(type_list):
+    options = [(ct.id, ct.code+'--'+ ct.name) for ct in type_list]
+    return Options(options)

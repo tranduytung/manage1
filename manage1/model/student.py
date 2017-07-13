@@ -1,7 +1,7 @@
 """Student model"""
 from sqlalchemy import Column
 from sqlalchemy.types import Integer, String
-
+from sqlalchemy.orm import relationship
 from manage1.model.meta import Base
 
 
@@ -12,6 +12,9 @@ class Student(Base):
     name = Column(String(100))
     email = Column(String(100))
     password = Column(String(100))
+    courses = relationship("Course",
+                           secondary='association',
+                           backref="students")
 
     def __init__(self, name='', email='', password=''):
         self.name = name

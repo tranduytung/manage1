@@ -19,20 +19,26 @@
                 </tr>
             </thead>
             <tbody>
-                {% for student in c.students %}
+                {% if c.students|length == 0 %}
                     <tr>
-                        <td class="center">{{student.name}}</td>
-                        <td class="center">{{student.email}}</td>
-                        <td><a href="{{h.url(controller='student',action='edit',id=student.id)}}">Edit</a></td>
-                        <td><a href="{{h.url(controller='student',action='show',id=student.id)}}">Show</a></td>
-                        <td>
-                            <a href="{{h.url(controller='student',action='delete',id=student.id)}}"
-                               data-method="delete" onclick="return confirm('Are you sure you want to delete?');">
-                                Delete
-                            </a>
-                        </td>
+                        <td colspan="4">Chua co SV nao</td>
                     </tr>
-                {% endfor %}
+                {% else %}
+                    {% for student in c.students %}
+                        <tr>
+                            <td class="center">{{student.name}}</td>
+                            <td class="center">{{student.email}}</td>
+                            <td><a href="{{h.url(controller='student',action='edit',id=student.id)}}">Edit</a></td>
+                            <td><a href="{{h.url(controller='student',action='show',id=student.id)}}">Show</a></td>
+                            <td>
+                                <a href="{{h.url(controller='student',action='delete',id=student.id)}}"
+                                   data-method="delete" onclick="return confirm('Are you sure you want to delete?');">
+                                    Delete
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
             </tbody>
             </table>
             <div class="text-center">
