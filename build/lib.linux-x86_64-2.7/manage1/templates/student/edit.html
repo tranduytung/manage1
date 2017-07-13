@@ -1,11 +1,10 @@
 {% extends "/layout/base.html" %}
-{% block title %}Student - New {% endblock %}
+{% block title %}Student - Edit {% endblock %}
 
 {% block content %}
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
-            {{ h.form(h.url(controller='student', action='create')) }}
-                {% if c.form_errors %}
+            {{ h.form(h.url(controller='student', action='update', id=request.urlvars['id']), method="POST") }}
                     {% if c.form_errors.has_key('email') %}
                         <p class="error">{{ c.form_errors['email'] }}</p>
                     {% endif %}
@@ -23,17 +22,11 @@
                     {%if c.form_errors.has_key('password_confirm') %}
                         <p class="error">{{ c.form_errors['password_confirm'] }}</p>
                     {% endif %}
-                    {%if c.form_errors.has_key('chained_validators') %}
+                        {%if c.form_errors.has_key('chained_validators') %}
                         <p class="error">{{ c.form_errors['chained_validators'] }}</p>
                     {% endif %}
                     Password Confirm: {{h.password('password_confirm',
                         value=c.form_result['password_confirm'] or '', class="form-control") }}
-                {% else %}
-                    Email: {{ h.text('email', class="form-control") }}
-                    Name: {{ h.text('name', class="form-control") }}
-                    Password: {{h.password('password', class="form-control") }}
-                    Password Confirm: {{h.password('password_confirm', class="form-control") }}
-                {% endif %}
                 <br>
                 <div class="text-center">
                 {{ h.submit('', 'Submit',class="btn btn-primary") }}
