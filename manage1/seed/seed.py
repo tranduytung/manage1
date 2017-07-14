@@ -24,7 +24,7 @@ class Seed(Command):
 
         print("----Seed Database----")
         for i in range(100):
-            student = model.Student(name=faker.name(), email=faker.email())
+            student = model.Student(name=faker.name(), email=faker.email(), password='a123456')
             Session.add(student)
         for i in range(100):
             name = faker.sentence(nb_words=4)

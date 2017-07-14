@@ -23,3 +23,6 @@ class Student(Base):
 
     def __repr__(self):
         return "<Student('%s')" % self.name
+
+    def find_by_name(self):
+        sql =''

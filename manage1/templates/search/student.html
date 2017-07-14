@@ -4,6 +4,7 @@
 {% block content %}
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
+            <h3>Search Student</h3>
             {{ h.form(h.url(controller='search', action='student'), method='GET') }}
                 {% if c.form_result %}
                     Name: {{ h.text('name', value=c.form_result['name'] or '',
