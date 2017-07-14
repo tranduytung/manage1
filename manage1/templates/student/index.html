@@ -1,0 +1,49 @@
+{% extends "/layout/base.html" %}
+{% block title %}Student - Index {% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-4 col-md-offset-2">
+            <a href="{{h.url(controller='student', action='new')}}" class="btn btn-primary">New Student</a>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <table class="table table-bordered paginator">
+            <thead>
+                <tr>
+                    <th class="center">Name</th>
+                    <th class="center">Email</th>
+                    <th class="center" colspan="3">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if c.students|length == 0 %}
+                    <tr>
+                        <td colspan="4">Chua co SV nao</td>
+                    </tr>
+                {% else %}
+                    {% for student in c.students %}
+                        <tr>
+                            <td class="center">{{student.name}}</td>
+                            <td class="center">{{student.email}}</td>
+                            <td><a href="{{h.url(controller='student',action='edit',id=student.id)}}">Edit</a></td>
+                            <td><a href="{{h.url(controller='student',action='show',id=student.id)}}">Show</a></td>
+                            <td>
+                                <a href="{{h.url(controller='student',action='delete',id=student.id)}}"
+                                   data-method="delete" onclick="return confirm('Are you sure you want to delete?');">
+                                    Delete
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    <div >
+                        {{c.students.pager('Page $page: $link_previous $link_next ~4~')}}
+                    </div>
+                {% endif %}
+            </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

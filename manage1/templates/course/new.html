@@ -1,0 +1,34 @@
+{% extends "/layout/base.html" %}
+{% block title %}Course - New {% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            {{ h.form(h.url(controller='course', action='create')) }}
+                {% if c.form_errors %}
+                    {% if c.form_errors.has_key('code') %}
+                        <p class="error">{{ c.form_errors['code'] }}</p>
+                    {% endif %}
+                    Code: {{ h.text('code', value=c.form_result['code'] or '',
+                        class="form-control") }}
+                    {%if c.form_errors.has_key('name') %}
+                        <p class="error">{{ c.form_errors['name'] }}</p>
+                    {% endif %}
+                    Name: {{h.text('name', value=c.form_result['name'] or '', class="form-control") }}
+                    {%if c.form_errors.has_key('number') %}
+                        <p class="error">{{ c.form_errors['number'] }}</p>
+                    {% endif %}
+                    Number: <input type="number" name="number" min="0" max="1000" class="form-control" value="{{c.form_result['number'] or ''}}">
+                {% else %}
+                    Code: {{ h.text('code', class="form-control") }}
+                    Name: {{ h.text('name', class="form-control") }}
+                    Number: <input type="number" name="number" min="0" max="1000" class="form-control">
+                {% endif %}
+                <br>
+                <div class="text-center">
+                {{ h.submit('', 'Submit',class="btn btn-primary") }}
+                </div>
+            {{ h.end_form() }}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "/layout/base.html" %}
+{% block title %}Course - Index {% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-4 col-md-offset-2">
+            <a href="{{h.url(controller='course', action='new')}}" class="btn btn-primary">New Course</a>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="center">Code</th>
+                    <th class="center">Name</th>
+                    <th class="center">Number</th>
+                    <th class="center" colspan="3">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if c.courses|length == 0 %}
+                    <tr>
+                        <td colspan="6">Chua co lop nao</td>
+                    </tr>
+                {% else %}
+                {% for course in c.courses %}
+                    <tr>
+                        <td class="center">{{course.code}}</td>
+                        <td class="center">{{course.name}}</td>
+                        <td class="center">{{course.number}}</td>
+                        <td><a href="{{h.url(controller='course',action='edit',id=course.id)}}">Edit</a></td>
+                        <td><a href="{{h.url(controller='course',action='show',id=course.id)}}">Show</a></td>
+                        <td>
+                            <a href="{{h.url(controller='course',action='delete',id=course.id)}}"
+                               data-method="delete" onclick="return confirm('Are you sure you want to delete?');">
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                {% endif %}
+            </tbody>
+            </table>
+            <div class="text-center">
+            </div>
+        </div>
+    </div>
+{% endblock %}

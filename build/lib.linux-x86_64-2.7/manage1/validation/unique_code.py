@@ -1,0 +1,14 @@
+import manage1.model as model
+from manage1.model.meta import Session as Session
+import formencode
+
+
+class UniqueCode(formencode.validators.String):
+
+    def _to_python(self, value, c):
+        course = Session.query(model.Course).filter_by(code = value).first()
+        if course > 0 and hasattr(c, 'id') and c.id != course.id:
+            raise formencode.Invalid('That course already exists', value, c)
+        if course > 0 and not hasattr(c, 'id'):
+            raise formencode.Invalid('That course already exists', value, c)
+        return formencode.validators.String._to_python(self, value, c)

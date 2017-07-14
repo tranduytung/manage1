@@ -1,0 +1,9 @@
+*.pyc
+*.egg-info
+.*.swp
+.cache
+.coverage
+.ropeproject
+.tox
+venv
+docs/_build
