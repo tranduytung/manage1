@@ -1,5 +1,10 @@
 import logging
+import os
+import random
 
+from formencode import htmlfill
+from pylons import config
+import shutil
 from pylons import request, response, session, tmpl_context as c, url
 from pylons.controllers.util import abort, redirect
 from pylons.decorators.rest import restrict
@@ -94,3 +99,26 @@ class StudentController(BaseController):
         Session.commit()
         h.flash('Xoa student thanh cong', 'success')
         return redirect(h.url(controller='student', action='index'))
+    #
+    # def upload(self, id):
+    #     c.student = Session.query(model.Student).filter_by(id=id).first()
+    #     return render_jinja('/student/upload.html')
+
+    def save_avatar(self):
+        id = request.POST['student_id']
+        c.student = Session.query(model.Student).filter_by(id=id).first()
+        my_file = request.POST['file']
+        my_file.filename = str(random.getrandbits(64))+ my_file.filename
+        permanent_file = open(
+            os.path.join(
+                config['app_conf']['temporary_store'],
+                my_file.filename.replace(os.sep, '_')
+            ),
+            'wb'
+        )
+        shutil.copyfileobj(my_file.file, permanent_file)
+        c.student.avatar = my_file.filename
+        Session.commit()
+        my_file.file.close()
+        permanent_file.close()
+        return  h.image_name(c.student)

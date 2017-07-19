@@ -1,0 +1,58 @@
+{% extends "/layout/base.html" %}
+{% block title %}Student - Upload {% endblock %}
+
+{% block content %}
+
+<form method='post'
+      style="background:url({{h.image_name(c.student)}}); background-size: 200px 200px; background-repeat: no-repeat;"
+      id ='upload-file' enctype="multipart/form-data">
+    <input type="hidden" name = 'avatar' id = 'student_id' value="{{request.urlvars['id']}}" />
+    <input type="file" name="avatar" id="my_file" />
+    <div id="div_action" style="display: none" class="modal">
+        <div class="modal-content">
+            <div id="img_src"></div>
+            <hr>
+            <div id='action_button'>
+                <input type='submit' id='upload-file-btn' value='OK' class="btn btn-primary" style="width: 10%"/>
+                <input type='submit' id='cancle-upload-btn' value='CANCLE' class="btn btn-danger" style="width: 10%"/>
+            </div>
+        </div>
+    </div>
+</form>
+<hr>
+
+<div id = 'avatar'>
+    <img src="{{h.image_name(c.student)}}" alt='' width='100px' height='100px'>
+</div>
+
+<script type="text/javascript">
+
+    var imageLoader = document.getElementById('my_file');
+    imageLoader.addEventListener('change', handleImage, false);
+
+    function handleImage(e) {
+        var FileUploadPath = imageLoader.value;
+        var Extension = FileUploadPath.substring(FileUploadPath.lastIndexOf('.') + 1).toLowerCase();
+        //The file uploaded is an image
+        if (Extension == "gif" || Extension == "png" || Extension == "bmp"
+            || Extension == "jpeg" || Extension == "jpg") {
+            e.stopPropagation();
+            e.preventDefault();
+            var reader = new FileReader();
+            reader.onload = function (event) {
+                $('#img_src').html( '<img height="350px" src="'+event.target.result+'"/>' );
+                $('#div_action').show();
+            }
+            reader.readAsDataURL(e.target.files[0]);
+        }
+        else{
+            alert("Photo only allows file types of GIF, PNG, JPG, JPEG and BMP. ");
+            return false;
+        }
+    }
+
+    $('#cancle-upload-btn').click(function() {
+        $('#div_action').hide();
+    });
+</script>
+{% endblock %}
