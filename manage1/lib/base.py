@@ -15,11 +15,6 @@ class BaseController(WSGIController):
         # WSGIController.__call__ dispatches to the Controller method
         # the request is routed to. This routing information is
         # available in environ['pylons.routes_dict']
-        env = Environment(
-            loader=PackageLoader('manage1', 'templates'),
-            autoescape=select_autoescape(['html', 'xml'])
-        )
-        template = env.get_template('/student/index.html')
 
         try:
             return WSGIController.__call__(self, environ, start_response)

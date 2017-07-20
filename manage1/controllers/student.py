@@ -99,16 +99,18 @@ class StudentController(BaseController):
         Session.commit()
         h.flash('Xoa student thanh cong', 'success')
         return redirect(h.url(controller='student', action='index'))
+
     #
-    # def upload(self, id):
-    #     c.student = Session.query(model.Student).filter_by(id=id).first()
-    #     return render_jinja('/student/upload.html')
+    def upload(self, id):
+        c.student = Session.query(model.Student).filter_by(id=id).first()
+        return render_jinja('/student/upload.html')
 
     def save_avatar(self):
+        print('tung')
         id = request.POST['student_id']
         c.student = Session.query(model.Student).filter_by(id=id).first()
         my_file = request.POST['file']
-        my_file.filename = str(random.getrandbits(64))+ my_file.filename
+        my_file.filename = str(random.getrandbits(64)) + my_file.filename
         permanent_file = open(
             os.path.join(
                 config['app_conf']['temporary_store'],
@@ -121,4 +123,4 @@ class StudentController(BaseController):
         Session.commit()
         my_file.file.close()
         permanent_file.close()
-        return  h.image_name(c.student)
+        return h.image_name(c.student)
