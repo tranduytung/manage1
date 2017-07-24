@@ -94,30 +94,60 @@
 <script type="text/javascript">
     var imageLoader = document.getElementById('my_file');
     imageLoader.addEventListener('change', handleImage, false);
-    var MAX_SIZE = 5*1024*1024 // 5Mb = 5 * 1024 * 1024 (Byte)
+    var MAX_SIZE = 5*1024*1024 // 5Mb = 5 * 1024 * 1024 (Byte);
+    var type;
     function handleImage(e) {
+        //The file uploaded is an image
         var FileUploadPath = imageLoader.value;
         var Extension = FileUploadPath.substring(FileUploadPath.lastIndexOf('.') + 1).toLowerCase();
-        //The file uploaded is an image
-        if (Extension == "gif" || Extension == "png" || Extension == "bmp"
-            || Extension == "jpeg" || Extension == "jpg") {
-            if(imageLoader.files[0].size > MAX_SIZE){
-                alert("Photo max size is 5Mb. ");
+        if(imageLoader.files[0].size > MAX_SIZE){
+            alert("Photo max size is 5Mb. ");
+        }
+        else{
+            e.stopPropagation();
+            e.preventDefault();
+            var check_reader = new FileReader();
+            check_reader.onload = function (event) {
+                var arr;
+                if(Extension == 'bmp'){
+                    arr= new Uint8Array(event.target.result).subarray(0, 2);
+                } else{
+                    arr= new Uint8Array(event.target.result).subarray(0, 4);
+                }
+                var header = "";
+                for(var i = 0; i < arr.length; i++) {
+                    header += arr[i].toString(16);
+                }
+                console.log(header);
+                switch (header) {
+                    case "89504e47": //PNG
+                        break;
+                    case "47494638": //GIF
+                        break;
+                    case "ffd8ffe0": //JPG
+                    case "424d": //BMP
+                    case "ffd8ffe1": //JPG
+                    case "ffd8ffe2": //JPG
+                        break;
+                    default:
+                        type = "unknown"; // Or you can use the blob.type as fallback
+                        break;
+                }
             }
-            else{
-                e.stopPropagation();
-                e.preventDefault();
-                var reader = new FileReader();
-                reader.onload = function (event) {
+            check_reader.readAsArrayBuffer(e.target.files[0]);
+
+            var reader = new FileReader();
+            reader.onload = function (event) {
+                if(type == 'unknown'){
+                    alert('File is not image');
+                    type = '';
+                }else{
                     $('#img_src').html( '<img id="blah" height="400px" src="'+event.target.result+'"/>' );
                     $('#div_action').show();
                     setTimeout(initCropper, 1000);
                 }
-                reader.readAsDataURL(e.target.files[0]);
             }
-        }
-        else{
-            alert("Photo only allows file types of GIF, PNG, JPG, JPEG and BMP. ");
+            reader.readAsDataURL(e.target.files[0]);
         }
         $(this).val("");
     }
