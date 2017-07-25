@@ -2,6 +2,7 @@
 from manage1.model.meta import Session, Base
 from manage1.model.student import Student
 from manage1.model.course import Course
+from manage1.model.users import Users
 import meta
 import sqlalchemy as sa
 from sqlalchemy import orm

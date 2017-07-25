@@ -7,7 +7,7 @@ available to Controllers. This module is available to templates as 'h'.
 #from webhelpers.html.tags import checkbox, password
 import hashlib
 import urllib
-
+from manage1.lib import auth
 from webhelpers.html import escape, HTML, literal, url_escape
 from webhelpers.html.tags import *
 from pylons import url

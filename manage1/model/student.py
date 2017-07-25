@@ -3,9 +3,10 @@ from sqlalchemy import Column
 from sqlalchemy.types import Integer, String
 from sqlalchemy.orm import relationship
 from manage1.model.meta import Base
+from authkit.users import Users
 
 
-class Student(Base):
+class Student(Base, Users):
     __tablename__ = "student"
 
     id = Column(Integer, primary_key=True)

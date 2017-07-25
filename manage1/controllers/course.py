@@ -11,11 +11,17 @@ from manage1.model.meta import Session as Session
 import manage1.model as model
 from manage1.form.new_course_form import NewCourseForm
 import formencode
+from authkit.permissions import ValidAuthKitUser
+from authkit.authorize.pylons_adaptors import authorize
 
 log = logging.getLogger(__name__)
 
 
 class CourseController(BaseController):
+    def __before__(self, action, **params):
+        user = session.get('user')
+        if user:
+            request.environ['REMOTE_USER'] = user.email
     def index(self):
         c.courses = Session.query(model.Course).all()
         if request.params.has_key('page'):
@@ -32,9 +38,9 @@ class CourseController(BaseController):
             abort(404, '404 Not Found')
         return render_jinja('/course/show.html')
 
+    # @authorize(h.auth.authorized(h.auth.is_valid_user))
     def new(self):
         return render_jinja('/course/new.html')
-
 
     def create(self):
         schema = NewCourseForm()
@@ -54,7 +60,7 @@ class CourseController(BaseController):
             h.flash('Tao moi thanh cong', 'success')
             return redirect(url(controller='course', action='index'))
 
-
+    @authorize(h.auth.is_valid_user)
     def edit(self, id):
         schema = NewCourseForm()
         course = Session.query(model.Course).filter_by(id=id).first()
@@ -64,7 +70,7 @@ class CourseController(BaseController):
         c.form_errors = {}
         return render_jinja('/course/edit.html')
 
-
+    @authorize(h.auth.user_in(['admin', 'editor']))
     @restrict('POST')
     def update(self, id=None):
         schema = NewCourseForm()
@@ -88,6 +94,7 @@ class CourseController(BaseController):
             h.flash('Edit thanh cong', 'success')
             return redirect(url(controller='course', action='index'))
 
+    @authorize(h.auth.has_delete_role)
     def delete(self, id):
         course = Session.query(model.Course).filter_by(id=id).first()
         if not course:
