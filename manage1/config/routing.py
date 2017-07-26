@@ -25,6 +25,7 @@ def make_map(config):
     map.connect('signout', '/signout', controller='account', action='signout')
     map.connect('signin', '/signin', controller='account', action='signin')
     map.connect('signedin', '/signedin', controller='account', action='signedin')
+    map.connect('signup', '/signup', controller='student', action='new')
     map.connect('/student/{id}/avatar/upload', controller='student',action='upload', id=id)
     map.connect('/{controller}/{action}')
     map.connect('/{controller}/{action}/{id}')

@@ -24,9 +24,9 @@ log = logging.getLogger(__name__)
 class StudentController(BaseController):
     def index(self):
         a = request.environ['authkit.users']
-        student_group_id =  Session.query(model.Group).filter_by(name = 'student').first().uid
+        student_group_id = Session.query(model.Group).filter_by(name='student').first().uid
         print student_group_id
-        c.students = Session.query(model.Users).filter_by(group_id = student_group_id).all()
+        c.students = Session.query(model.Users).filter_by(group_id=student_group_id).all()
         if request.params:
             page = request.params['page']
         else:
@@ -34,23 +34,30 @@ class StudentController(BaseController):
         c.students = paginate.Page(c.students, page=page, items_per_page=10)
         return render_jinja('/student/index.html')
 
-    # @authorize(h.auth.has_admin_role)
     @authorize(h.auth.is_valid_user)
     def show(self, id):
         c.student = Session.query(model.Users).filter_by(id=id).first()
         if not c.student:
             abort(404, '404 Not Found')
-        if request.environ['REMOTE_USER'] == c.student.email or\
-                'admin' in request.environ['authkit.users'].user_group(request.environ['REMOTE_USER']):
+        if request.environ['REMOTE_USER'] == c.student.email or \
+                        'admin' in request.environ['authkit.users'].user_group(request.environ['REMOTE_USER']):
             c.courses = Session.query(model.Course).all()
             return render_jinja('/student/show.html')
         else:
             abort(403)
 
     def new(self):
+        if request.environ.has_key('REMOTE_USER') and \
+            'admin' not in request.environ['authkit.users'].user_group(request.environ['REMOTE_USER']):
+            h.flash('Ban da dang nhap. Signout de tiep tuc', 'error')
+            return redirect(h.url('signedin'))
         return render_jinja('/student/new.html')
 
     def create(self):
+        if request.environ.has_key('REMOTE_USER') and \
+            'admin' not in request.environ['authkit.users'].user_group(request.environ['REMOTE_USER']):
+            h.flash('Ban da dang nhap. Signout de tiep tuc', 'error')
+            return redirect(h.url('signedin'))
         schema = NewStudentForm()
         try:
             form_result = schema.to_python(request.params)
@@ -63,9 +70,10 @@ class StudentController(BaseController):
             email = request.params['email']
             name = request.params['name']
             password = request.params['password']
-            user = model.Users(email=email,password=password)
-            user.student = model.Users(name=name)
+            user = model.Users(email=email, password=password)
+            user.user_info = model.UsersInfo(name=name)
             Session.add(user)
+            request.environ['authkit.users'].user_set_group(user.email, 'student')
             Session.commit()
             h.flash('Tao moi thanh cong', 'success')
             return redirect(url(controller='student', action='index'))

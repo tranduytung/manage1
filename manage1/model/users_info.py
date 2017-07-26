@@ -1,9 +1,8 @@
-"""Student model"""
+"""UsersInfo model"""
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.types import Integer, String
 from sqlalchemy.orm import relationship, backref
 from manage1.model.meta import Base
-from authkit.users import Users
 
 
 class UsersInfo(Base):

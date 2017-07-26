@@ -2,10 +2,28 @@
 {% block title %}Sign in {% endblock %}
 
 {% block content %}
-<h1>Signin</h1>
-{{ h.form(h.url(controller='account', action='signin'), method="POST") }}
-    {{h.text(name='email')}}
-    {{h.password(name='password')}}
-    {{h.submit(value="Sign in", name='submit')}}
-{{h.end_form()}}
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <h1 class="text-center">Signin</h1>
+            {{ h.form(h.url(controller='account', action='signin'), method="POST") }}
+                {% if c.form_errors %}
+                    {% if c.form_errors.has_key('email') %}
+                        <p class="error">{{ c.form_errors['email'] }}</p>
+                    {% endif %}
+                    Email Address: {{ h.text('email', value=c.form_result['email'] or '',
+                        class="form-control") }}
+                    {% if c.form_errors.has_key('password') %}
+                        <p class="error">{{ c.form_errors['password'] }}</p>
+                    {% endif %}
+                    Password: {{ h.password('password', value=c.form_result['password'] or '',
+                        class="form-control") }}
+                {% else %}
+                    Email Address: {{h.text('email', class="form-control")}}
+                    Password: {{h.password('password', class="form-control")}}
+                {% endif %}
+                <br>
+                {{h.submit(value="Sign in", name='submit', class="form-control")}}
+            {{h.end_form()}}
+        </div>
+    </div>
 {% endblock %}
