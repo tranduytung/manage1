@@ -5,7 +5,7 @@
 <div class="row">
     <div class="col-md-3">
         <h3>
-            Name: {{c.student.name}}
+            Name: {% if c.student.user_info: %}{{c.student.user_info.name}}{%endif%}
         </h3>
         <hr>
         <div>

@@ -18,10 +18,7 @@ log = logging.getLogger(__name__)
 
 
 class CourseController(BaseController):
-    def __before__(self, action, **params):
-        user = session.get('user')
-        if user:
-            request.environ['REMOTE_USER'] = user.email
+
     def index(self):
         c.courses = Session.query(model.Course).all()
         if request.params.has_key('page'):

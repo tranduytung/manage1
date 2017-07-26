@@ -12,5 +12,11 @@ class Users(Base):
     id = Column('uid', Integer, primary_key=True)
     email = Column('username', String(100))
     password = Column('password', String(100))
+    group_id = Column('group_uid', Integer)
 
+    courses = relationship("Course",
+                           secondary='association',
+                           backref="users")
 
+    def __repr__(self):
+        return "<User ('%s')" % self.email

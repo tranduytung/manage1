@@ -2,6 +2,7 @@ import logging
 import os
 import random
 
+from authkit.authorize.pylons_adaptors import authorize
 from formencode import htmlfill
 from pylons import config
 import shutil
@@ -22,7 +23,10 @@ log = logging.getLogger(__name__)
 
 class StudentController(BaseController):
     def index(self):
-        c.students = Session.query(model.Student).all()
+        a = request.environ['authkit.users']
+        student_group_id =  Session.query(model.Group).filter_by(name = 'student').first().uid
+        print student_group_id
+        c.students = Session.query(model.Users).filter_by(group_id = student_group_id).all()
         if request.params:
             page = request.params['page']
         else:
@@ -30,12 +34,18 @@ class StudentController(BaseController):
         c.students = paginate.Page(c.students, page=page, items_per_page=10)
         return render_jinja('/student/index.html')
 
+    # @authorize(h.auth.has_admin_role)
+    @authorize(h.auth.is_valid_user)
     def show(self, id):
-        c.student = Session.query(model.Student).filter_by(id=id).first()
+        c.student = Session.query(model.Users).filter_by(id=id).first()
         if not c.student:
             abort(404, '404 Not Found')
-        c.courses = Session.query(model.Course).all()
-        return render_jinja('/student/show.html')
+        if request.environ['REMOTE_USER'] == c.student.email or\
+                'admin' in request.environ['authkit.users'].user_group(request.environ['REMOTE_USER']):
+            c.courses = Session.query(model.Course).all()
+            return render_jinja('/student/show.html')
+        else:
+            abort(403)
 
     def new(self):
         return render_jinja('/student/new.html')
@@ -53,18 +63,22 @@ class StudentController(BaseController):
             email = request.params['email']
             name = request.params['name']
             password = request.params['password']
-            Session.add(model.Student(name=name, email=email, password=password))
+            user = model.Users(email=email,password=password)
+            user.student = model.Users(name=name)
+            Session.add(user)
             Session.commit()
             h.flash('Tao moi thanh cong', 'success')
             return redirect(url(controller='student', action='index'))
 
     def edit(self, id):
         schema = NewStudentForm()
-        student = Session.query(model.Student).filter_by(id=id).first()
+        student = Session.query(model.Users).filter_by(id=id).first()
         if not student:
             abort(404, '404 Not Found')
         # c.form_result = schema.from_python(student.__dict__)
-        c.form_result = student.__dict__
+        dict = student.__dict__
+        c.form_result = dict.update(student.user.__dict__)
+        c.form_result = dict
         c.form_errors = {}
         c.id = int(id)
         return render_jinja('/student/edit.html')
@@ -72,7 +86,7 @@ class StudentController(BaseController):
     @restrict('POST')
     def update(self, id=None):
         schema = NewStudentForm()
-        student = Session.query(model.Student).filter_by(id=id).first()
+        student = Session.query(model.Users).filter_by(id=id).first()
         c.id = int(id)
         if not student:
             abort(404, '404 Not Found')
@@ -92,7 +106,7 @@ class StudentController(BaseController):
             return redirect(url(controller='student', action='index'))
 
     def delete(self, id):
-        student = Session.query(model.Student).filter_by(id=id).first()
+        student = Session.query(model.Users).filter_by(id=id).first()
         if not student:
             abort(404, '404 Not Found')
         Session.delete(student)
@@ -101,14 +115,14 @@ class StudentController(BaseController):
         return redirect(h.url(controller='student', action='index'))
 
     #
-    def upload(self, id):
-        c.student = Session.query(model.Student).filter_by(id=id).first()
-        return render_jinja('/student/upload.html')
+    # def upload(self, id):
+    #     c.student = Session.query(model.Users).filter_by(id=id).first()
+    #     return render_jinja('/student/upload.html')
 
     def save_avatar(self):
         print('tung')
         id = request.POST['student_id']
-        c.student = Session.query(model.Student).filter_by(id=id).first()
+        c.student = Session.query(model.Users).filter_by(id=id).first()
         my_file = request.POST['file']
         my_file.filename = str(random.getrandbits(64)) + my_file.filename
         permanent_file = open(
@@ -119,7 +133,7 @@ class StudentController(BaseController):
             'wb'
         )
         shutil.copyfileobj(my_file.file, permanent_file)
-        c.student.avatar = my_file.filename
+        c.student.user_info.avatar = my_file.filename
         Session.commit()
         my_file.file.close()
         permanent_file.close()

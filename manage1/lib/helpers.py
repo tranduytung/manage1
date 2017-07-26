@@ -25,8 +25,8 @@ def create_courses_options(type_list):
 
 def image_name(student):
     gravatar_id = student.email
-    if student.avatar:
-        return '/upload/temporary/'+student.avatar
+    if student.user_info and student.user_info.avatar:
+        return '/upload/temporary/'+student.user_info.avatar
     else:
         gravatar_url = 'https://www.gravatar.com/avatar/' + hashlib.md5(gravatar_id.lower()).hexdigest() + '?'
         return gravatar_url

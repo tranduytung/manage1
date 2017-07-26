@@ -2,9 +2,9 @@
 {% block title %}Sign in {% endblock %}
 
 {% block content %}
-
+<h1>Signin</h1>
 {{ h.form(h.url(controller='account', action='signin'), method="POST") }}
-    {{h.text(name='username')}}
+    {{h.text(name='email')}}
     {{h.password(name='password')}}
     {{h.submit(value="Sign in", name='submit')}}
 {{h.end_form()}}

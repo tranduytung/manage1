@@ -6,8 +6,8 @@ import formencode
 class UniqueEmail(formencode.validators.Email):
 
     def _to_python(self, value, c):
-        users_email = Session.query(model.Student).filter_by(email = value).first()
-        if users_email > 0 and hasattr(c, 'id') and c.id != users_email.id:
+        users_email = Session.query(model.Users).filter_by(email = value).first()
+        if users_email > 0 and hasattr(c, 'id') and c.id != users_email.student.id:
             raise formencode.Invalid('That username already exists', value, c)
         if users_email > 0 and not hasattr(c, 'id'):
             raise formencode.Invalid('That username already exists', value, c)

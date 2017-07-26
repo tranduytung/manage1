@@ -7,7 +7,8 @@ from pylons.templating import render_jinja2 as render_jinja
 
 is_valid_user = ValidAuthKitUser()
 has_delete_role = HasAuthKitRole(['delete'])
-has_auth_kit_role = HasAuthKitRole
+has_edit_role = HasAuthKitRole(['editor'])
+has_admin_role = HasAuthKitRole('admin')
 remote_user = RemoteUser()
 user_in = UserIn
 def render_signin():

@@ -2,10 +2,9 @@
 {% block title %}Student - Index {% endblock %}
 
 {% block content %}
-{{h.auth.authorized(h.auth.has_auth_kit_role(['admin']))}}
-{% if h.auth.authorized(h.auth.user_in(['admin', 'editor'])) %}
-| <a href="{{h.url(controller='course', action='edit', id=c.course.id)}}">Edit
-Page</a>
+{% if h.auth.authorized(h.auth.has_admin_role) %}
+<a href="{{h.url(controller='course', action='edit', id=c.course.id)}}">Edit
+Course</a>
 {% endif %}
 <div class="row">
     <div class="col-md-4 col-md-offset-2">
