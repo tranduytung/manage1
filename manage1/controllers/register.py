@@ -1,5 +1,6 @@
 import logging
 
+from authkit.authorize.pylons_adaptors import authorize
 from pylons import request, response, session, tmpl_context as c, url
 from pylons.controllers.util import abort, redirect
 from pylons.decorators.rest import restrict
@@ -15,15 +16,11 @@ log = logging.getLogger(__name__)
 
 
 class RegisterController(BaseController):
-    # def new(self):
-    #     c.students = Session.query(model.Student).all()
-    #     c.courses = Session.query(model.Course).all()
-    #     return render_jinja('register/new.html')
 
+    @authorize(h.auth.is_valid_user)
     @restrict('POST')
     def create(self):
-        student_id = request.params['student_id']
-        student = Session.query(model.Student).filter_by(id=student_id).first()
+        student = Session.query(model.Users).filter_by(email=request.environ['REMOTE_USER']).first()
         if not student:
             abort(404, '404 Student Not Found')
             return redirect(h.url(controller='student', action='index'))
@@ -32,8 +29,8 @@ class RegisterController(BaseController):
         if not course:
             abort(404, '404 Course Not Found')
             return redirect(h.url(controller='course', action='index'))
-        register = Session.query(model.association_table).filter_by(student_id=student_id,
-                                                                        course_id=course_id).first()
+        register = Session.query(model.association_table).filter_by(user_id=student.id,
+                                                                    course_id=course_id).first()
         if register:
             h.flash('Da dang ki tu truoc', 'error')
         else:
@@ -43,19 +40,18 @@ class RegisterController(BaseController):
         return redirect(url(controller='student', action='show', id=student.id))
 
     def delete(self):
-        student_id = request.params['student_id']
-        student = Session.query(model.Student).filter_by(id=student_id).first()
+        student = Session.query(model.Users).filter_by(email = request.environ['REMOTE_USER']).first()
         if not student:
             abort(404, '404 Student Not Found')
         course_id = request.params['course_id']
         course = Session.query(model.Course).filter_by(id=course_id).first()
         if not course:
             abort(404, '404 Course Not Found')
-        register = Session.query(model.association_table).filter_by(student_id=student_id,
+        register = Session.query(model.association_table).filter_by(user_id=student.id,
                                                                     course_id=course_id).first()
         if not register:
             abort(404, '404 Register Not Found')
         student.courses.remove(course)
         Session.commit()
         h.flash('Xoa dang ki thanh cong', 'success')
-        return redirect(h.url(controller='student', action='show', id=student_id))
+        return redirect(h.url(controller='student', action='show', id=student.id))

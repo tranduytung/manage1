@@ -6,8 +6,9 @@ from manage1.model.users import Users
 from manage1.model.users_info import UsersInfo
 import meta
 import sqlalchemy as sa
-from sqlalchemy import orm
-
+# from sqlalchemy import orm
+# from sqlalchemy import Column
+# from sqlalchemy.types import Integer, String
 
 def init_model(engine):
     """Call me before using any of the tables or classes in the model"""
@@ -18,3 +19,7 @@ association_table = sa.Table('association', Base.metadata,
     sa.Column('user_id', sa.types.Integer, sa.ForeignKey('users.uid')),
     sa.Column('course_id', sa.types.Integer, sa.ForeignKey('course.id'))
 )
+# class Register(object):
+#     user_id = Column('user_id', Integer)
+#     course_id = Column('course_id', Integer)
+# orm.mapper(Register, association_table)

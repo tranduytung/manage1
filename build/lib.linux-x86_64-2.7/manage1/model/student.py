@@ -1,25 +1,28 @@
-"""Student model"""
-from sqlalchemy import Column
-from sqlalchemy.types import Integer, String
-from sqlalchemy.orm import relationship
-from manage1.model.meta import Base
-
-
-class Student(Base):
-    __tablename__ = "student"
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String(100))
-    email = Column(String(100))
-    password = Column(String(100))
-    courses = relationship("Course",
-                           secondary='association',
-                           backref="students")
-
-    def __init__(self, name='', email='', password=''):
-        self.name = name
-        self.email = email
-        self.password = password
-
-    def __repr__(self):
-        return "<Student('%s')" % self.name
+# """Student model"""
+# from sqlalchemy import Column, ForeignKey
+# from sqlalchemy.types import Integer, String
+# from sqlalchemy.orm import relationship, backref
+# from manage1.model.meta import Base
+# from authkit.users import Users
+#
+#
+# class Student(Base):
+#     __tablename__ = "student"
+#
+#     id = Column(Integer, primary_key=True)
+#     user_id = Column(Integer, ForeignKey('users.uid'))
+#     name = Column(String(100))
+#     avatar = Column(String(100))
+#
+#     user = relationship("Users", backref=backref("student", uselist=False))
+#     courses = relationship("Course",
+#                            secondary='association',
+#                            backref="students")
+#
+#     def __init__(self, name='', avatar=''):
+#         self.name = name
+#         self.avatar = avatar
+#
+#     def __repr__(self):
+#         return "<Student('%s')" % self.name
+#

@@ -16,7 +16,7 @@ flash = _Flash()
 
 
 def create_students_options(type_list):
-    options = [(ct.id, ct.name+'--'+ ct.email) for ct in type_list]
+    options = [(ct.id, ct.user_info.name+'--'+ ct.email) for ct in type_list]
     return Options(options)
 
 def create_courses_options(type_list):
@@ -30,3 +30,23 @@ def image_name(student):
     else:
         gravatar_url = 'https://www.gravatar.com/avatar/' + hashlib.md5(gravatar_id.lower()).hexdigest() + '?'
         return gravatar_url
+
+def send_mail(SUBJECT, BODY, FROM, TO):
+    print 'tung1'
+    # from email.mime.multipart import MIMEMultipart
+    # from email.mime.text import MIMEText
+    # import smtplib
+    # gmail_password = 'tranduytung27011994'
+    # msg = MIMEMultipart()
+    # msg['From'] = FROM
+    # msg['To'] = TO
+    # msg['Subject'] = SUBJECT
+    # HTML_BODY = MIMEText(BODY, 'html')
+    # msg.attach(HTML_BODY)
+    # print 'tung2'
+    # server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+    # server.ehlo()
+    # server.login(FROM, gmail_password)
+    # server.sendmail(FROM, TO, msg.as_string())
+    # server.close()
+    # return 'tung3'

@@ -71,25 +71,18 @@
         <div class="text-center">
         </div>
     </div>
+    {% if request.environ['REMOTE_USER'] == c.student.email %}
     <div class="col-md-3">
         {{ h.form(h.url(controller='register', action='create'),method='POST') }}
-            {% if c.form_errors %}
-                {% if c.form_errors.has_key('student_id') %}
-                <p class="error">{{ c.form_errors['student_id'] }}</p>
-                {% endif %}
-                Student: {{ h.text('email', value=c.form_result['email'] or '',
-                class="form-control") }}
-            {% else %}
-                {{ h.hidden('student_id', c.student.id) }}
-                Course: {{ h.select('course_id', None, h.create_courses_options(c.courses),
+            Course: {{ h.select('course_id', None, h.create_courses_options(c.courses),
                     class="form-control") }}
-                {% endif %}
             <br>
             <div class="text-center">
                 {{ h.submit('', 'Submit',class="btn btn-primary") }}
             </div>
         {{ h.end_form() }}
     </div>
+    {% endif %}
 </div>
 <script type="text/javascript">
     var imageLoader = document.getElementById('my_file');

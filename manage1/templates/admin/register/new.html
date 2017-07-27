@@ -1,0 +1,66 @@
+{% extends "/layout/base.html" %}
+{% block title %}Register - New {% endblock %}
+
+{% block content %}
+<div class="row">
+    {{ h.form(h.url(controller='admin/register', action='create')) }}
+        <div class="col-md-4 col-md-offset-2">
+            Student: {{ h.select('student_id', None, h.create_students_options(c.students),
+                class="form-control") }}
+        </div>
+        <div class="col-md-4">
+            Course: {{ h.select('course_id', None, h.create_courses_options(c.courses),
+                class="form-control") }}
+        </div><br>
+        <div class="text-center">
+            {{ h.submit('', 'Submit',class="btn btn-primary") }}
+        </div>
+    {{ h.end_form() }}
+</div>
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <h3>Registered</h3>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th class="center">Student Name</th>
+                <th class="center">Course Code</th>
+                <th class="center">Course Name</th>
+                <th class="center">Number</th>
+                <th class="center">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% if c.registers|length == 0 %}
+                    <tr>
+                        <td colspan="4">Chua dang ki lop nao</td>
+                    </tr>
+                {% else %}
+                    {% for register in c.registers %}
+                        {% set student = c.model.Session.query(c.model.Users).filter_by(id=register.user_id).first() %}
+                        {% set course = c.model.Session.query(c.model.Course).filter_by(id=register.course_id).first() %}
+                    <tr>
+                        <td class="center">
+                            <a href="{{h.url(controller='student',action='show',id=register.user_id)}}">{{student.user_info.name}}</a>
+                        </td>
+                        <td class="center">
+                            <a href="{{h.url(controller='course',action='show',id=register.course_id)}}">{{course.code}}</a>
+                        </td>
+                        <td class="center">{{course.name}}</td>
+                        <td class="center">{{register.number}}</td>
+                        <td>
+                            <a href="{{h.url(controller='admin/register',action='delete',course_id= register.course_id, student_id = register.user_id)}}"
+                               data-method="delete" onclick="return confirm('Are you sure you want to cancel?');">
+                                Cancel
+                            </a>
+                        </td>
+                    </tr>
+                    {%endfor%}
+                {% endif %}
+            </tbody>
+        </table>
+        <div class="text-center">
+        </div>
+    </div>
+</div>
+{% endblock %}

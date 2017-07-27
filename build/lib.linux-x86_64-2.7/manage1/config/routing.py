@@ -19,9 +19,16 @@ def make_map(config):
     map.connect('/error/{action}/{id}', controller='error')
 
     # CUSTOM ROUTES HERE
-    map.connect('/', controller='student', action='index')
     # map.connect('/student/register/', controller='register', action='create')
+    # map.connect('/student/save_avatar', controller='student', action='save_avatar',
+    #             conditions=dict(method=['POST']))
+    map.connect('signout', '/signout', controller='account', action='signout')
+    map.connect('signin', '/signin', controller='account', action='signin')
+    map.connect('signedin', '/signedin', controller='account', action='signedin')
+    map.connect('signup', '/signup', controller='student', action='new')
+    map.connect('/student/{id}/avatar/upload', controller='student',action='upload', id=id)
     map.connect('/{controller}/{action}')
     map.connect('/{controller}/{action}/{id}')
+    map.connect('/', controller='student', action='index')
 
     return map

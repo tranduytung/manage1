@@ -14,6 +14,9 @@
       <ul class="nav navbar-nav">
         <li><a href="{{h.url(controller='student',action='index')}}">Students</a></li>
         <li><a href="{{h.url(controller='course',action='index')}}">Course</a></li>
+        {% if h.auth.authorized(h.auth.has_admin_role) %}
+          <li><a href="{{h.url(controller='admin/register',action='new')}}">Register</a></li>
+        {% endif %}
       </ul>
 
       <ul class="nav navbar-nav navbar-right">

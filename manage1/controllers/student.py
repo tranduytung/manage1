@@ -2,7 +2,8 @@ import logging
 import os
 import random
 
-from authkit.authorize.pylons_adaptors import authorize
+import time
+from authkit.authorize.pylons_adaptors import authorize, authorized
 from formencode import htmlfill
 from pylons import config
 import shutil
@@ -39,14 +40,24 @@ class StudentController(BaseController):
         c.student = Session.query(model.Users).filter_by(id=id).first()
         if not c.student:
             abort(404, '404 Not Found')
-        if request.environ['REMOTE_USER'] == c.student.email or \
-                        'admin' in request.environ['authkit.users'].user_group(request.environ['REMOTE_USER']):
+        if (request.environ['REMOTE_USER'] == c.student.email or \
+            'admin' in request.environ['authkit.users'].user_group(request.environ['REMOTE_USER'])) and \
+            'admin' not in request.environ['authkit.users'].user_group(c.student.email):
             c.courses = Session.query(model.Course).all()
             return render_jinja('/student/show.html')
         else:
             abort(403)
 
     def new(self):
+        c.user = Session.query(model.Users).filter_by(id=1).first()
+        email_content = render_jinja('/layout/email_layout/signup.html')
+        from rq import Queue
+        from manage1.queue_job.worker import conn
+        q = Queue('high', connection=conn)
+        result = q.enqueue(h.send_mail, 'Subject', email_content,
+            'tranduytung1994@gmail.com', 'dungnt.hedspi@gmail.com')
+        time.sleep(2)
+        print result.result
         if request.environ.has_key('REMOTE_USER') and \
             'admin' not in request.environ['authkit.users'].user_group(request.environ['REMOTE_USER']):
             h.flash('Ban da dang nhap. Signout de tiep tuc', 'error')
@@ -70,11 +81,19 @@ class StudentController(BaseController):
             email = request.params['email']
             name = request.params['name']
             password = request.params['password']
-            user = model.Users(email=email, password=password)
-            user.user_info = model.UsersInfo(name=name)
-            Session.add(user)
-            request.environ['authkit.users'].user_set_group(user.email, 'student')
+            c.user = model.Users(email=email, password=password)
+            c.user.user_info = model.UsersInfo(name=name)
+            Session.add(c.user)
+            request.environ['authkit.users'].user_set_group(c.user.email, 'student')
             Session.commit()
+
+            # send mail by job
+            email_content = render_jinja('/layout/email_layout/signup.html')
+            from rq import Queue
+            from manage1.queue_job.worker import conn
+            q = Queue(connection=conn)
+            q.enqueue(h.send_mail,'Subject', email_content, 'tranduytung1994@gmail.com', 'dungnt.hedspi@gmail.com')
+
             h.flash('Tao moi thanh cong', 'success')
             return redirect(url(controller='student', action='index'))
 

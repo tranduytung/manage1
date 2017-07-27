@@ -10,7 +10,7 @@
     <br>
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
-            <table class="table table-bordered">
+            <table class="table table-bordered paginator">
             <thead>
                 <tr>
                     <th class="center">Name</th>
@@ -26,7 +26,7 @@
                 {% else %}
                     {% for student in c.students %}
                         <tr>
-                            <td class="center">{{student.name}}</td>
+                            <td class="center">{{student.user_info.name}}</td>
                             <td class="center">{{student.email}}</td>
                             <td><a href="{{h.url(controller='student',action='edit',id=student.id)}}">Edit</a></td>
                             <td><a href="{{h.url(controller='student',action='show',id=student.id)}}">Show</a></td>
@@ -38,11 +38,12 @@
                             </td>
                         </tr>
                     {% endfor %}
+                    <div >
+                        {{c.students.pager('Page $page: $link_previous $link_next ~4~')}}
+                    </div>
                 {% endif %}
             </tbody>
             </table>
-            <div class="text-center">
-            </div>
         </div>
     </div>
 {% endblock %}

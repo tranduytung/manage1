@@ -4,6 +4,7 @@
 {% block content %}
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
+            <h3>Search Course</h3>
             {{ h.form(h.url(controller='search', action='course'), method='GET') }}
                 {% if c.form_result %}
                     Code: {{ h.text('code', value=c.form_result['code'] or '',
@@ -46,6 +47,10 @@
                         <td><a href="{{h.url(controller='course',action='show',id=course.id)}}">Show</a></td>
                     </tr>
                 {% endfor %}
+                <div >
+                    {{c.courses.pager('Page $page: $link_previous $link_next ~4~',
+                        code=c.form_result['code'], name=c.form_result['name'])}}
+                </div>
                 {% endif %}
             </tbody>
             </table>
