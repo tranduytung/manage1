@@ -49,15 +49,6 @@ class StudentController(BaseController):
             abort(403)
 
     def new(self):
-        c.user = Session.query(model.Users).filter_by(id=1).first()
-        email_content = render_jinja('/layout/email_layout/signup.html')
-        from rq import Queue
-        from manage1.queue_job.worker import conn
-        q = Queue('high', connection=conn)
-        result = q.enqueue(h.send_mail, 'Subject', email_content,
-            'tranduytung1994@gmail.com', 'dungnt.hedspi@gmail.com')
-        time.sleep(2)
-        print result.result
         if request.environ.has_key('REMOTE_USER') and \
             'admin' not in request.environ['authkit.users'].user_group(request.environ['REMOTE_USER']):
             h.flash('Ban da dang nhap. Signout de tiep tuc', 'error')
@@ -88,11 +79,11 @@ class StudentController(BaseController):
             Session.commit()
 
             # send mail by job
-            email_content = render_jinja('/layout/email_layout/signup.html')
             from rq import Queue
             from manage1.queue_job.worker import conn
+            email_content = render_jinja('/layout/email_layout/signup.html')
             q = Queue(connection=conn)
-            q.enqueue(h.send_mail,'Subject', email_content, 'tranduytung1994@gmail.com', 'dungnt.hedspi@gmail.com')
+            q.enqueue(h.send_mail, 'Subject', email_content, 'dungnt.hedspi@gmail.com')
 
             h.flash('Tao moi thanh cong', 'success')
             return redirect(url(controller='student', action='index'))

@@ -13,7 +13,9 @@ from webhelpers.html.tags import *
 from pylons import url
 from webhelpers.pylonslib.flash import Flash as _Flash
 flash = _Flash()
-
+from pylons import config
+email_from = 'tranduytung1994@gmail.com'
+email_password = 'tranduytung27011994'
 
 def create_students_options(type_list):
     options = [(ct.id, ct.user_info.name+'--'+ ct.email) for ct in type_list]
@@ -31,22 +33,20 @@ def image_name(student):
         gravatar_url = 'https://www.gravatar.com/avatar/' + hashlib.md5(gravatar_id.lower()).hexdigest() + '?'
         return gravatar_url
 
-def send_mail(SUBJECT, BODY, FROM, TO):
-    print 'tung1'
-    # from email.mime.multipart import MIMEMultipart
-    # from email.mime.text import MIMEText
-    # import smtplib
-    # gmail_password = 'tranduytung27011994'
-    # msg = MIMEMultipart()
-    # msg['From'] = FROM
-    # msg['To'] = TO
-    # msg['Subject'] = SUBJECT
-    # HTML_BODY = MIMEText(BODY, 'html')
-    # msg.attach(HTML_BODY)
-    # print 'tung2'
-    # server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-    # server.ehlo()
-    # server.login(FROM, gmail_password)
-    # server.sendmail(FROM, TO, msg.as_string())
-    # server.close()
-    # return 'tung3'
+def send_mail(SUBJECT, BODY, TO):
+    from email.mime.multipart import MIMEMultipart
+    from email.mime.text import MIMEText
+    import smtplib
+    msg = MIMEMultipart()
+    msg['From'] = email_from
+    msg['To'] = TO
+    msg['Subject'] = SUBJECT
+    HTML_BODY = MIMEText(BODY, 'html')
+    msg.attach(HTML_BODY)
+    print 'Start send'
+    server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+    server.ehlo()
+    server.login(email_from, email_password)
+    server.sendmail(email_from, TO, msg.as_string())
+    server.close()
+    print 'Send done'
