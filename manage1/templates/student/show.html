@@ -71,7 +71,7 @@
         <div class="text-center">
         </div>
     </div>
-    {% if request.environ['REMOTE_USER'] == c.student.email %}
+    {% if request.environ['REMOTE_USER'] == c.student.email and 'admin'not in request.environ['authkit.users'].user_group(c.student.email) %}
     <div class="col-md-3">
         {{ h.form(h.url(controller='register', action='create'),method='POST') }}
             Course: {{ h.select('course_id', None, h.create_courses_options(c.courses),

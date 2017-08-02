@@ -21,14 +21,14 @@ class RegisterController(BaseController):
     @restrict('POST')
     def create(self):
         student = Session.query(model.Users).filter_by(email=request.environ['REMOTE_USER']).first()
+        if 'admin' in request.environ['authkit.users'].user_group(student.email):
+            abort(403, '403 Not Found')
         if not student:
             abort(404, '404 Student Not Found')
-            return redirect(h.url(controller='student', action='index'))
         course_id = request.params['course_id']
         course = Session.query(model.Course).filter_by(id=course_id).first()
         if not course:
             abort(404, '404 Course Not Found')
-            return redirect(h.url(controller='course', action='index'))
         register = Session.query(model.association_table).filter_by(user_id=student.id,
                                                                     course_id=course_id).first()
         if register:

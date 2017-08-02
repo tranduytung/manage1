@@ -30,12 +30,14 @@
                             <td class="center">{{student.email}}</td>
                             <td><a href="{{h.url(controller='student',action='edit',id=student.id)}}">Edit</a></td>
                             <td><a href="{{h.url(controller='student',action='show',id=student.id)}}">Show</a></td>
+                            {% if request.environ['REMOTE_USER'] != student.email %}
                             <td>
                                 <a href="{{h.url(controller='student',action='delete',id=student.id)}}"
                                    data-method="delete" onclick="return confirm('Are you sure you want to delete?');">
                                     Delete
                                 </a>
                             </td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                     <div >

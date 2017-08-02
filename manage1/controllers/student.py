@@ -40,9 +40,9 @@ class StudentController(BaseController):
         c.student = Session.query(model.Users).filter_by(id=id).first()
         if not c.student:
             abort(404, '404 Not Found')
-        if (request.environ['REMOTE_USER'] == c.student.email or \
-            'admin' in request.environ['authkit.users'].user_group(request.environ['REMOTE_USER'])) and \
-            'admin' not in request.environ['authkit.users'].user_group(c.student.email):
+        if request.environ['REMOTE_USER'] == c.student.email or \
+                ('admin' in request.environ['authkit.users'].user_group(request.environ['REMOTE_USER']) and \
+                'admin' not in request.environ['authkit.users'].user_group(c.student.email)):
             c.courses = Session.query(model.Course).all()
             return render_jinja('/student/show.html')
         else:
@@ -83,7 +83,7 @@ class StudentController(BaseController):
             from manage1.queue_job.worker import conn
             email_content = render_jinja('/layout/email_layout/signup.html')
             q = Queue(connection=conn)
-            q.enqueue(h.send_mail, 'Subject', email_content, 'dungnt.hedspi@gmail.com')
+            q.enqueue(h.send_mail, 'Subject', email_content, c.user.email)
 
             h.flash('Tao moi thanh cong', 'success')
             return redirect(url(controller='student', action='index'))
@@ -127,7 +127,8 @@ class StudentController(BaseController):
         student = Session.query(model.Users).filter_by(id=id).first()
         if not student:
             abort(404, '404 Not Found')
-        Session.delete(student)
+        request.environ['authkit.users'].user_delete(student.email)
+        # Session.delete(student)
         Session.commit()
         h.flash('Xoa student thanh cong', 'success')
         return redirect(h.url(controller='student', action='index'))
@@ -155,4 +156,5 @@ class StudentController(BaseController):
         Session.commit()
         my_file.file.close()
         permanent_file.close()
+        print request._content_type__get
         return h.image_name(c.student)
