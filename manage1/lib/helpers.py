@@ -50,3 +50,8 @@ def send_mail(SUBJECT, BODY, TO):
     server.sendmail(email_from, TO, msg.as_string())
     server.close()
     print 'Send done'
+
+def new_token():
+    import random
+    import string
+    return  ''.join([random.choice(string.ascii_letters + string.digits) for n in xrange(32)])

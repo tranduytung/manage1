@@ -28,6 +28,9 @@ class StudentController(BaseController):
         student_group_id = Session.query(model.Group).filter_by(name='student').first().uid
         print student_group_id
         c.students = Session.query(model.Users).filter_by(group_id=student_group_id).all()
+        c.user = Session.query(model.Users).filter_by(group_id=student_group_id).first()
+        email_content = render_jinja('/layout/email_layout/signup.html')
+        print email_content
         if request.params:
             page = request.params['page']
         else:

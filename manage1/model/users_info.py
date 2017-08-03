@@ -12,7 +12,7 @@ class UsersInfo(Base):
     user_id = Column(Integer, ForeignKey('users.uid'))
     name = Column(String(100))
     avatar = Column(String(100))
-
+    access_token = Column(String(100))
     user = relationship("Users", backref=backref("user_info", uselist=False))
 
     def __init__(self, name='', avatar=''):
