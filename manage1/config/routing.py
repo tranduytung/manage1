@@ -27,6 +27,7 @@ def make_map(config):
     map.connect('signedin', '/signedin', controller='account', action='signedin')
     map.connect('signup', '/signup', controller='student', action='new')
     map.connect('/student/{id}/avatar/upload', controller='student',action='upload', id=id)
+    map.connect('/student/eventfeeds', controller='student', action='eventfeeds')
     map.connect('/{controller}s/', action='index')
     map.connect('/{controller}/{action}')
     map.connect('/{controller}/{action}/{id}')

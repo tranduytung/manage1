@@ -3,6 +3,8 @@ import os
 import random
 
 import time
+from json import dumps
+
 from authkit.authorize.pylons_adaptors import authorize, authorized
 from formencode import htmlfill
 from pylons import config
@@ -18,6 +20,7 @@ from manage1.model.meta import Session as Session
 import manage1.model as model
 from manage1.form.new_student_form import NewStudentForm
 import formencode
+from dateutil.relativedelta import relativedelta
 
 log = logging.getLogger(__name__)
 
@@ -161,3 +164,39 @@ class StudentController(BaseController):
         permanent_file.close()
         print request._content_type__get
         return h.image_name(c.student)
+
+    from pylons.decorators import jsonify
+    @jsonify
+    def eventfeeds(self):
+        result = []
+        student_id = request.params['student_id']
+        student = Session.query(model.Users).filter_by(id=student_id).first()
+        if not student:
+            return result
+        courses = student.courses
+        for course in courses:
+            type = course.schedule.type
+            if type == model.ScheduleType.NO_REPEAT:
+                result.append({
+                    'title': course.name,
+                    'start': str(course.schedule.start),
+                    'end': str(course.schedule.end),
+                    'url': h.url(controller='course', action='show', id=course.id)
+                })
+            else:
+                start = course.schedule.start
+                end = course.schedule.end
+                while start.date() < course.schedule.end_repeat:
+                    result.append({
+                        'title': course.name,
+                        'start': str(start),
+                        'end': str(end),
+                        'url': h.url(controller='course', action='show', id=course.id),
+                    })
+                    if type == model.ScheduleType.WEEKLY: # repeat weekly
+                        start = start + relativedelta(weeks=1)
+                        end = end + relativedelta(weeks=1)
+                    elif type == model.ScheduleType.MONTHLY: # repeat monthly
+                        start = start + relativedelta(months=1)
+                        end = end + relativedelta(months=1)
+        return result

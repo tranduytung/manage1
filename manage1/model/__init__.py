@@ -4,6 +4,8 @@ from manage1.model.meta import Session, Base
 from manage1.model.course import Course
 from manage1.model.users import Users
 from manage1.model.users_info import UsersInfo
+from manage1.model.course_schedule import CourseSchedule
+from manage1.model.course_schedule import ScheduleType
 import meta
 import sqlalchemy as sa
 # from sqlalchemy import orm
