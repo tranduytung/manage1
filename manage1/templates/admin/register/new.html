@@ -26,7 +26,6 @@
                 <th class="center">Student Name</th>
                 <th class="center">Course Code</th>
                 <th class="center">Course Name</th>
-                <th class="center">Number</th>
                 <th class="center">Action</th>
             </tr>
             </thead>
@@ -47,7 +46,6 @@
                             <a href="{{h.url(controller='course',action='show',id=register.course_id)}}">{{course.code}}</a>
                         </td>
                         <td class="center">{{course.name}}</td>
-                        <td class="center">{{register.number}}</td>
                         <td>
                             <a href="{{h.url(controller='admin/register',action='delete',course_id= register.course_id, student_id = register.user_id)}}"
                                data-method="delete" onclick="return confirm('Are you sure you want to cancel?');">

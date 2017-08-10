@@ -27,13 +27,8 @@ log = logging.getLogger(__name__)
 
 class StudentController(BaseController):
     def index(self):
-        a = request.environ['authkit.users']
         student_group_id = Session.query(model.Group).filter_by(name='student').first().uid
-        print student_group_id
         c.students = Session.query(model.Users).filter_by(group_id=student_group_id).all()
-        c.user = Session.query(model.Users).filter_by(group_id=student_group_id).first()
-        email_content = render_jinja('/layout/email_layout/signup.html')
-        print email_content
         if request.params:
             page = request.params['page']
         else:
@@ -48,7 +43,7 @@ class StudentController(BaseController):
             abort(404, '404 Not Found')
         if request.environ['REMOTE_USER'] == c.student.email or \
                 ('admin' in request.environ['authkit.users'].user_group(request.environ['REMOTE_USER']) and \
-                'admin' not in request.environ['authkit.users'].user_group(c.student.email)):
+                             'admin' not in request.environ['authkit.users'].user_group(c.student.email)):
             c.courses = Session.query(model.Course).all()
             return render_jinja('/student/show.html')
         else:
@@ -56,14 +51,14 @@ class StudentController(BaseController):
 
     def new(self):
         if request.environ.has_key('REMOTE_USER') and \
-            'admin' not in request.environ['authkit.users'].user_group(request.environ['REMOTE_USER']):
+                        'admin' not in request.environ['authkit.users'].user_group(request.environ['REMOTE_USER']):
             h.flash('Ban da dang nhap. Signout de tiep tuc', 'error')
             return redirect(h.url('signedin'))
         return render_jinja('/student/new.html')
 
     def create(self):
         if request.environ.has_key('REMOTE_USER') and \
-            'admin' not in request.environ['authkit.users'].user_group(request.environ['REMOTE_USER']):
+                        'admin' not in request.environ['authkit.users'].user_group(request.environ['REMOTE_USER']):
             h.flash('Ban da dang nhap. Signout de tiep tuc', 'error')
             return redirect(h.url('signedin'))
         schema = NewStudentForm()
@@ -162,7 +157,6 @@ class StudentController(BaseController):
         Session.commit()
         my_file.file.close()
         permanent_file.close()
-        print request._content_type__get
         return h.image_name(c.student)
 
     from pylons.decorators import jsonify
@@ -193,10 +187,10 @@ class StudentController(BaseController):
                         'end': str(end),
                         'url': h.url(controller='course', action='show', id=course.id),
                     })
-                    if type == model.ScheduleType.WEEKLY: # repeat weekly
+                    if type == model.ScheduleType.WEEKLY:  # repeat weekly
                         start = start + relativedelta(weeks=1)
                         end = end + relativedelta(weeks=1)
-                    elif type == model.ScheduleType.MONTHLY: # repeat monthly
+                    elif type == model.ScheduleType.MONTHLY:  # repeat monthly
                         start = start + relativedelta(months=1)
                         end = end + relativedelta(months=1)
         return result

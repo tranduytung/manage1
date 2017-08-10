@@ -22,7 +22,7 @@ def create_students_options(type_list):
     return Options(options)
 
 def create_courses_options(type_list):
-    options = [(ct.id, ct.code+'--'+ ct.name) for ct in type_list]
+    options = [(ct.id, ct.code+'--'+ ct.name +'----'+ct.schedule.type.value) for ct in type_list]
     return Options(options)
 
 def image_name(student):

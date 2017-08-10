@@ -25,6 +25,15 @@ Course</a>
                 Number: {{c.course.number}}
             </div>
         </div>
+        <div class="list-group">
+            <div class="list-group-item">
+                <span class="glyphicon glyphicon-user"></span>
+                Repeat: {{c.course.schedule.type.value}}
+                {% if c.course.schedule.type != c.model.ScheduleType.NO_REPEAT %}
+                    Until:{{c.course.schedule.end_repeat}}
+                {% endif %}
+            </div>
+        </div>
     </div>
     <div class="col-md-4">
         <table class="table table-bordered">

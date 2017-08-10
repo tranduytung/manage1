@@ -9,7 +9,7 @@ from paste.script.command import Command
 DB_URL = "sqlite:///development.db"
 engine = sa.create_engine(DB_URL)
 model.init_model(engine)
-faker = Faker()
+faker = Faker(locale='en_US')
 # users = request.environ['authkit.users']
 
 class Seed(Command):
@@ -72,7 +72,7 @@ class Seed(Command):
         start.append(datetime.datetime(year=2017, month=8, day=9, hour=8, minute=30))
         end.append(datetime.datetime(year=2017, month=8, day=10, hour=16, minute=45))
 
-        for i in range(20):
+        for i in range(10):
             name = faker.sentence(nb_words=4)
             code = 'IT' + str(randint(1000, 10000))
             a = randint(0,8)
@@ -83,7 +83,7 @@ class Seed(Command):
             course.schedule = model.CourseSchedule(start=start_course, end=end_course, type=type)
             Session.add(course)
 
-        for i in range(20):
+        for i in range(10):
             name = faker.sentence(nb_words=4)
             code = 'IT' + str(randint(1000, 10000))
             a = randint(0,8)
@@ -91,6 +91,18 @@ class Seed(Command):
             start_course = start[a]
             end_course = end[a]
             type = model.ScheduleType.WEEKLY
+            course = model.Course(code=code, name=name, number=randint(10, 100))
+            course.schedule = model.CourseSchedule(start=start_course, end=end_course, type=type, end_repeat=end_repeat)
+            Session.add(course)
+
+        for i in range(10):
+            name = faker.sentence(nb_words=4)
+            code = 'IT' + str(randint(1000, 10000))
+            a = randint(0,8)
+            end_repeat = datetime.date(start[a].year, start[a].month+3, start[a].day)
+            start_course = start[a]
+            end_course = end[a]
+            type = model.ScheduleType.MONTHLY
             course = model.Course(code=code, name=name, number=randint(10, 100))
             course.schedule = model.CourseSchedule(start=start_course, end=end_course, type=type, end_repeat=end_repeat)
             Session.add(course)

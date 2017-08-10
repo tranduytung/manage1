@@ -18,6 +18,7 @@ $(document).ready(function() {
                 student_id: student_id,
             },
         },
+        timezone: 'Asia/Bangkok'
     });
 
 });

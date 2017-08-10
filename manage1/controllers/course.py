@@ -31,6 +31,7 @@ class CourseController(BaseController):
 
     def show(self, id):
         c.course = Session.query(model.Course).filter_by(id=id).first()
+        c.model = model
         if not c.course:
             abort(404, '404 Not Found')
         return render_jinja('/course/show.html')

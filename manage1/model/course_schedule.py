@@ -6,9 +6,9 @@ from manage1.model.meta import Base
 import enum
 
 class ScheduleType(enum.Enum):
-    NO_REPEAT = 1
-    WEEKLY = 2
-    MONTHLY = 3
+    NO_REPEAT = 'no_repeat'
+    WEEKLY = 'weekly'
+    MONTHLY = 'monthly'
 
 class CourseSchedule(Base):
     __tablename__ = "course_schedule"
@@ -17,7 +17,7 @@ class CourseSchedule(Base):
     course_id = Column(Integer, ForeignKey('course.id'))
     start = Column(DateTime)
     end = Column(DateTime)
-    type = Column(Enum(ScheduleType))
+    type = Column(Enum(ScheduleType), default=ScheduleType.NO_REPEAT)
     end_repeat = Column(Date)
     course = relationship("Course", backref=backref("schedule", uselist=False))
     def __init__(self, start=None, end=None, type=None, end_repeat=None):
