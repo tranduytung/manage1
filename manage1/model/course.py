@@ -4,7 +4,8 @@ from sqlalchemy.types import Integer, String, DateTime
 from sqlalchemy.orm import relationship, backref
 from manage1.model.meta import Base
 
-class Course(Base):
+class \
+        Course(Base):
     __tablename__ = "course"
 
     id = Column(Integer, primary_key=True)

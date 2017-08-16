@@ -8,3 +8,4 @@
 venv
 docs/_build
 manage1/public/upload/temporary/
+!/manage1/public/assets/schedue.js

@@ -164,27 +164,72 @@ class StudentController(BaseController):
     def eventfeeds(self):
         result = []
         student_id = request.params['student_id']
+        default_date = request.params['default_date']
+        from datetime import datetime
+        import calendar
+        default_date = datetime.strptime(default_date, '%Y-%m-%d')
         student = Session.query(model.Users).filter_by(id=student_id).first()
         if not student:
             return result
         courses = student.courses
+        # for course in courses:
+        #     type = course.schedule.type
+        #     if type == model.ScheduleType.NO_REPEAT:
+        #         result.append({
+        #             'title': course.name,
+        #             'start': str(course.schedule.start),
+        #             'end': str(course.schedule.end),
+        #             'url': h.url(controller='course', action='show', id=course.id)
+        #         })
+        #     else:
+        #         start = course.schedule.start
+        #         end = course.schedule.end
+        #         while start.date() < course.schedule.end_repeat:
+        #             result.append({
+        #                 'title': course.name,
+        #                 'start': str(start),
+        #                 'end': str(end),
+        #                 'url': h.url(controller='course', action='show', id=course.id),
+        #             })
+        #             if type == model.ScheduleType.WEEKLY:  # repeat weekly
+        #                 start = start + relativedelta(weeks=1)
+        #                 end = end + relativedelta(weeks=1)
+        #             elif type == model.ScheduleType.MONTHLY:  # repeat monthly
+        #                 start = start + relativedelta(months=1)
+        #                 end = end + relativedelta(months=1)
+
+        start_month = default_date.replace(day=15, month=default_date.month - 1)
+        end_month = default_date.replace(month=default_date.month + 1,
+                                         day=15,
+                                         # day=calendar.monthrange(year=default_date.year,
+                                         #                         month=default_date.month + 1)[1],
+                                         hour=23, minute=59, second=59)
         for course in courses:
             type = course.schedule.type
+            start = course.schedule.start
+            end = course.schedule.end
             if type == model.ScheduleType.NO_REPEAT:
-                result.append({
-                    'title': course.name,
-                    'start': str(course.schedule.start),
-                    'end': str(course.schedule.end),
-                    'url': h.url(controller='course', action='show', id=course.id)
-                })
-            else:
-                start = course.schedule.start
-                end = course.schedule.end
-                while start.date() < course.schedule.end_repeat:
+                if start <= end_month or end >= start_month:
                     result.append({
-                        'title': course.name,
+                        'id': course.id,
+                        'name': course.name,
+                        'title': course.code,
+                        'start': str(course.schedule.start),
+                        'end': str(course.schedule.end),
+                        'type': 0,
+                        'url': h.url(controller='course', action='show', id=course.id)
+                    })
+            else:
+                end_repeat = course.schedule.end_repeat
+                while (start.date() <= end_repeat) and \
+                        (start <= end_month or (end > start_month and end <= end_month)):
+                    result.append({
+                        'id': course.id,
+                        'name': course.name,
+                        'title': course.code,
                         'start': str(start),
                         'end': str(end),
+                        'type': 1,
                         'url': h.url(controller='course', action='show', id=course.id),
                     })
                     if type == model.ScheduleType.WEEKLY:  # repeat weekly
