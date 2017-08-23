@@ -13,6 +13,7 @@ from manage1.form.new_course_form import NewCourseForm
 import formencode
 from authkit.permissions import ValidAuthKitUser
 from authkit.authorize.pylons_adaptors import authorize
+from pylons.i18n.translation import _
 
 log = logging.getLogger(__name__)
 
@@ -127,13 +128,13 @@ class CourseController(BaseController):
         notification = model.Notification(activity_id=activity.id)
         for user in course.users:
             user.notifications.append(notification)
-            self.__notification_pusher(remote_user.user_info.name,
-                                       action=activity.action_type.name,
-                                       object_name=course.code,
-                                       object_type=activity.object_type.name,
-                                       time=activity.created_at.strftime('%Y/%m/%d - %H:%M'),
-                                       object_id=course.id,
-                                       user_id= user.id)
+            # self.__notification_pusher(remote_user.user_info.name,
+            #                            action=activity.action_type.name,
+            #                            object_name=course.code,
+            #                            object_type=activity.object_type.name,
+            #                            time=activity.created_at.strftime('%Y/%m/%d - %H:%M'),
+            #                            object_id=course.id,
+            #                            user_id= user.id)
 
         course.delete = True
         Session.commit()
@@ -152,29 +153,29 @@ class CourseController(BaseController):
         )
         pusher_client.trigger('my-channel', 'my-event',
                               {'user_name': user_name,
-                               'action': action,
+                               'action': _(action.lower()),
                                'object_name': object_name,
-                               'object_type': object_type,
+                               'object_type': _(object_type.lower()),
                                'time': time,
                                'object_id': object_id
                                })
 
-    def __notification_pusher(self, user_name, action, object_name, object_type, time, object_id, user_id):
-        import pusher
-
-        pusher_client = pusher.Pusher(
-            app_id='384245',
-            key='15e72d442d16f43e033c',
-            secret='f09b4384a0341259dbbd',
-            cluster='ap1',
-            ssl=True
-        )
-        pusher_client.trigger('my-channel', 'notification',
-                              {'user_name': user_name,
-                               'action': action,
-                               'object_name': object_name,
-                               'object_type': object_type,
-                               'time': time,
-                               'object_id': object_id,
-                               'user_id': user_id
-                               })
+    # def __notification_pusher(self, user_name, action, object_name, object_type, time, object_id, user_id):
+    #     import pusher
+    #
+    #     pusher_client = pusher.Pusher(
+    #         app_id='384245',
+    #         key='15e72d442d16f43e033c',
+    #         secret='f09b4384a0341259dbbd',
+    #         cluster='ap1',
+    #         ssl=True
+    #     )
+    #     pusher_client.trigger('my-channel', 'notification',
+    #                           {'user_name': user_name,
+    #                            'action': _(action.lower()),
+    #                            'object_name': object_name,
+    #                            'object_type': _(object_type.lower()),
+    #                            'time': time,
+    #                            'object_id': object_id,
+    #                            'user_id': user_id
+    #                            })

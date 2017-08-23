@@ -8,10 +8,10 @@
         <tr>
             <td>
                 {{ activity.user.user_info.name }}
-                {{ activity.action_type.name.lower() }}
+                {{ _(activity.action_type.name.lower()) }}
                 {% if activity.object_type == c.model.ObjectType.COURSE %}
                     {% set course = c.model.Session.query(c.model.Course).filter_by(id=activity.object_id).first() %}
-                    course {{course.code}}
+                    {{_(activity.object_type.name.lower())}} {{course.code}}
                 {% endif %}
             </td>
             <td>
