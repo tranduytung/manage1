@@ -20,7 +20,7 @@ log = logging.getLogger(__name__)
 class CourseController(BaseController):
 
     def index(self):
-        c.courses = Session.query(model.Course).all()
+        c.courses = Session.query(model.Course).filter_by(delete=False).all()
         if request.params.has_key('page'):
             page = request.params['page']
         else:
@@ -68,7 +68,7 @@ class CourseController(BaseController):
         c.form_errors = {}
         return render_jinja('/course/edit.html')
 
-    @authorize(h.auth.user_in(['admin', 'editor']))
+    @authorize(h.auth.has_delete_role)
     @restrict('POST')
     def update(self, id=None):
         schema = NewCourseForm()
@@ -88,16 +88,53 @@ class CourseController(BaseController):
             course.code = request.params['code']
             course.name = request.params['name']
             course.number = request.params['number']
+            remote_user = model.Session.query(model.Users). \
+                filter_by(email=request.environ['REMOTE_USER']).first()
+            activity = model.Activity(action_type=model.ActionType.EDIT,
+                                      object_id=course.id,
+                                      object_type=model.ObjectType.COURSE)
+            remote_user.activities.append(activity)
             Session.commit()
             h.flash('Edit thanh cong', 'success')
             return redirect(url(controller='course', action='index'))
 
     @authorize(h.auth.has_delete_role)
     def delete(self, id):
-        course = Session.query(model.Course).filter_by(id=id).first()
+        course = Session.query(model.Course).filter_by(id=id, delete=False).first()
         if not course:
             abort(404, '404 Not Found')
-        Session.delete(course)
+        remote_user = model.Session.query(model.Users).\
+            filter_by(email=request.environ['REMOTE_USER']).first()
+        activity = model.Activity(action_type=model.ActionType.DELETE,
+                                  object_id=course.id,
+                                  object_type=model.ObjectType.COURSE)
+        remote_user.activities.append(activity)
+        self.__add_pusher(remote_user.user_info.name,
+                          action= activity.action_type.name,
+                          object_name= course.code,
+                          object_type = activity.object_type.name,
+                          time= activity.created_at.strftime('%Y/%m/%d - %H:%M'),
+                          object_id = course.id)
+        course.delete = True
         Session.commit()
         h.flash('Xoa course thanh cong', 'success')
         return redirect(h.url(controller='course', action='index'))
+
+    def __add_pusher(self, user_name, action, object_name, object_type, time, object_id):
+        import pusher
+
+        pusher_client = pusher.Pusher(
+            app_id='384245',
+            key='15e72d442d16f43e033c',
+            secret='f09b4384a0341259dbbd',
+            cluster='ap1',
+            ssl=True
+        )
+        pusher_client.trigger('my-channel', 'my-event',
+                              {'user_name': user_name,
+                               'action': action,
+                               'object_name': object_name,
+                               'object_type': object_type,
+                               'time': time,
+                               'object_id': object_id
+                               })

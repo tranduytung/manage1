@@ -26,7 +26,7 @@
                     </tr>
                 {% else %}
                 {% for course in c.courses %}
-                    <tr>
+                    <tr id="course-{{course.id}}">
                         <td class="center">{{course.code}}</td>
                         <td class="center">{{course.name}}</td>
                         <td class="center">{{course.number}}</td>

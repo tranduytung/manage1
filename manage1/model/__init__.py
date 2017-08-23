@@ -6,6 +6,9 @@ from manage1.model.users import Users
 from manage1.model.users_info import UsersInfo
 from manage1.model.course_schedule import CourseSchedule
 from manage1.model.course_schedule import ScheduleType
+from manage1.model.activity import ActionType
+from manage1.model.activity import Activity
+from manage1.model.activity import ObjectType
 import meta
 import sqlalchemy as sa
 # from sqlalchemy import orm

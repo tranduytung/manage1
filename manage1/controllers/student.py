@@ -13,7 +13,7 @@ from pylons import request, response, session, tmpl_context as c, url
 from pylons.controllers.util import abort, redirect
 from pylons.decorators.rest import restrict
 import webhelpers.paginate as paginate
-
+from pylons.i18n.translation import _, ungettext, set_lang
 import manage1.lib.helpers as h
 from manage1.lib.base import BaseController, render, render_jinja
 from manage1.model.meta import Session as Session
@@ -67,7 +67,7 @@ class StudentController(BaseController):
         except formencode.validators.Invalid, error:
             c.form_result = error.value
             c.form_errors = error.error_dict or {}
-            h.flash('Tao moi that bai', 'error')
+            h.flash(_('signedin'), 'error')
             return render_jinja('/student/new.html')
         else:
             email = request.params['email']

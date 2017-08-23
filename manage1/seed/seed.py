@@ -37,7 +37,8 @@ class Seed(Command):
         # users.user_add_role("admin@gmail.com", role="admin")
         Session.commit()
         print("----Seed Database----")
-
+        admin = model.Session.query(model.Users).filter_by(id=1).first()
+        admin.user_info = model.UsersInfo(name = 'admin')
         for i in range(100):
             student = model.Users(email=faker.email(), password='a123456', group_id = 2)
             student.user_info = model.UsersInfo(name=faker.name())

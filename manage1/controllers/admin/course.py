@@ -68,3 +68,15 @@ class CourseController(BaseController):
                         end = end + relativedelta(months=1)
         return result
 
+    def pusher(self):
+        import pusher
+
+        pusher_client = pusher.Pusher(
+            app_id='384245',
+            key='15e72d442d16f43e033c',
+            secret='f09b4384a0341259dbbd',
+            cluster='ap1',
+            ssl=True
+        )
+        # h.send_mail('subject', 'body', 'tranduy94@gmail.com')
+        pusher_client.trigger('my-channel', 'my-event', {'message': 'hello tung world'})

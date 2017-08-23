@@ -17,6 +17,7 @@ class Users(Base):
     courses = relationship("Course",
                            secondary='association',
                            backref="users")
+    activities = relationship("Activity", backref="user")
 
     def __repr__(self):
         return "<User ('%s')" % self.email
