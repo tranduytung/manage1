@@ -17,6 +17,7 @@ class ActionType(enum.Enum):
 class ObjectType(enum.Enum):
     USER = 0
     COURSE = 1
+    ACCOUNT = 2
 
 class Activity(Base):
     __tablename__ = "activity"

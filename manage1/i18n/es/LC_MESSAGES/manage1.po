@@ -34,3 +34,10 @@ msgstr "at"
 msgid "edit"
 msgstr "edit"
 
+#: manage1/lib/helper
+msgid "create"
+msgstr "create"
+
+#: manage1/lib/helper
+msgid "account"
+msgstr "account"

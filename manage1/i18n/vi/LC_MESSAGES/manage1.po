@@ -34,3 +34,14 @@ msgstr "lúc"
 msgid "edit"
 msgstr "sửa"
 
+#: manage1/lib/helper
+msgid "edit"
+msgstr "sửa"
+
+#: manage1/lib/helper
+msgid "create"
+msgstr "tạo"
+
+#: manage1/lib/helper
+msgid "account"
+msgstr "tài khoản"

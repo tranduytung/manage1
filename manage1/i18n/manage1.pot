@@ -17,11 +17,27 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.4.0\n"
 
-#: manage1/controllers/student.py:70
-msgid "signedin"
+#: manage1/lib/helper
+msgid "course"
 msgstr ""
 
-#: manage1/lib/helpers.py:68
+#: manage1/lib/helper
+msgid "delete"
+msgstr ""
+
+#: manage1/lib/helper
 msgid "at"
+msgstr ""
+
+#: manage1/lib/helper
+msgid "edit"
+msgstr ""
+
+#: manage1/lib/helper
+msgid "edit"
+msgstr ""
+
+#: manage1/lib/helper
+msgid "create"
 msgstr ""
 

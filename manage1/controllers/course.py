@@ -93,7 +93,7 @@ class CourseController(BaseController):
                                       object_id=course.id,
                                       object_type=model.ObjectType.COURSE)
             remote_user.activities.append(activity)
-            self.__activity_pusher(remote_user.user_info.name,
+            h.activity_pusher(remote_user.user_info.name,
                                    action=activity.action_type.name,
                                    object_name=course.code,
                                    object_type=activity.object_type.name,
@@ -117,7 +117,7 @@ class CourseController(BaseController):
         remote_user.activities.append(activity)
 
         # activity pusher
-        self.__activity_pusher(remote_user.user_info.name,
+        h.activity_pusher(remote_user.user_info.name,
                                action=activity.action_type.name,
                                object_name=course.code,
                                object_type=activity.object_type.name,
@@ -141,24 +141,6 @@ class CourseController(BaseController):
         h.flash('Xoa course thanh cong', 'success')
         return redirect(h.url(controller='course', action='index'))
 
-    def __activity_pusher(self, user_name, action, object_name, object_type, time, object_id):
-        import pusher
-
-        pusher_client = pusher.Pusher(
-            app_id='384245',
-            key='15e72d442d16f43e033c',
-            secret='f09b4384a0341259dbbd',
-            cluster='ap1',
-            ssl=True
-        )
-        pusher_client.trigger('my-channel', 'my-event',
-                              {'user_name': user_name,
-                               'action': _(action.lower()),
-                               'object_name': object_name,
-                               'object_type': _(object_type.lower()),
-                               'time': time,
-                               'object_id': object_id
-                               })
 
     # def __notification_pusher(self, user_name, action, object_name, object_type, time, object_id, user_id):
     #     import pusher
