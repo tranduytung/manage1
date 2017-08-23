@@ -21,17 +21,17 @@ class BaseController(WSGIController):
         # available in environ['pylons.routes_dict']
         # def __before__(self, action, **params):
         user = session.get('user')
-        language = session.get('language')
-        if not language:
-            session['language'] = 'es'
-        set_lang(session['language'])
-        c.activities = model.Session.query(model.Activity).\
-            order_by(model.Activity.created_at.desc()).all()
-        c.model = model
         if user:
             request.environ['REMOTE_USER'] = user.email
             user = model.Session.query(model.Users).filter_by(email=user.email).first()
             c.notifications = user.notifications
+        language = session.get('language')
+        if not language:
+            session['language'] = 'es'
+        set_lang(session['language'])
+        c.activities = model.Session.query(model.Activity). \
+            order_by(model.Activity.created_at.desc()).all()
+        c.model = model
         try:
             return WSGIController.__call__(self, environ, start_response)
         finally:

@@ -146,7 +146,7 @@ class StudentController(BaseController):
         h.flash('Xoa student thanh cong', 'success')
         return redirect(h.url(controller='student', action='index'))
 
-    #
+
     # def upload(self, id):
     #     c.student = Session.query(model.Users).filter_by(id=id).first()
     #     return render_jinja('/student/upload.html')

@@ -94,11 +94,11 @@ class CourseController(BaseController):
                                       object_type=model.ObjectType.COURSE)
             remote_user.activities.append(activity)
             h.activity_pusher(remote_user.user_info.name,
-                                   action=activity.action_type.name,
-                                   object_name=course.code,
-                                   object_type=activity.object_type.name,
-                                   time=activity.created_at.strftime('%Y/%m/%d - %H:%M'),
-                                   object_id=course.id)
+                              action=activity.action_type.name,
+                              object_name=course.code,
+                              object_type=activity.object_type.name,
+                              time=activity.created_at.strftime('%Y/%m/%d - %H:%M'),
+                              object_id=course.id)
             Session.commit()
             h.flash('Edit thanh cong', 'success')
             return redirect(url(controller='course', action='index'))
@@ -118,11 +118,11 @@ class CourseController(BaseController):
 
         # activity pusher
         h.activity_pusher(remote_user.user_info.name,
-                               action=activity.action_type.name,
-                               object_name=course.code,
-                               object_type=activity.object_type.name,
-                               time=activity.created_at.strftime('%Y/%m/%d - %H:%M'),
-                               object_id=course.id)
+                          action=activity.action_type.name,
+                          object_name=course.code,
+                          object_type=activity.object_type.name,
+                          time=activity.created_at.strftime('%Y/%m/%d - %H:%M'),
+                          object_id=course.id)
 
         # new notification
         notification = model.Notification(activity_id=activity.id)
@@ -142,22 +142,22 @@ class CourseController(BaseController):
         return redirect(h.url(controller='course', action='index'))
 
 
-    # def __notification_pusher(self, user_name, action, object_name, object_type, time, object_id, user_id):
-    #     import pusher
-    #
-    #     pusher_client = pusher.Pusher(
-    #         app_id='384245',
-    #         key='15e72d442d16f43e033c',
-    #         secret='f09b4384a0341259dbbd',
-    #         cluster='ap1',
-    #         ssl=True
-    #     )
-    #     pusher_client.trigger('my-channel', 'notification',
-    #                           {'user_name': user_name,
-    #                            'action': _(action.lower()),
-    #                            'object_name': object_name,
-    #                            'object_type': _(object_type.lower()),
-    #                            'time': time,
-    #                            'object_id': object_id,
-    #                            'user_id': user_id
-    #                            })
+        # def __notification_pusher(self, user_name, action, object_name, object_type, time, object_id, user_id):
+        #     import pusher
+        #
+        #     pusher_client = pusher.Pusher(
+        #         app_id='384245',
+        #         key='15e72d442d16f43e033c',
+        #         secret='f09b4384a0341259dbbd',
+        #         cluster='ap1',
+        #         ssl=True
+        #     )
+        #     pusher_client.trigger('my-channel', 'notification',
+        #                           {'user_name': user_name,
+        #                            'action': _(action.lower()),
+        #                            'object_name': object_name,
+        #                            'object_type': _(object_type.lower()),
+        #                            'time': time,
+        #                            'object_id': object_id,
+        #                            'user_id': user_id
+        #                            })
