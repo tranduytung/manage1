@@ -43,6 +43,10 @@ class Seed(Command):
             student = model.Users(email=faker.email(), password='a123456', group_id = 2)
             student.user_info = model.UsersInfo(name=faker.name())
             Session.add(student)
+
+        tung = model.Users(email='tranduytung1994@gmail.com', password='a123456', group_id = 2)
+        tung.user_info = model.UsersInfo(name='tung')
+        Session.add(tung)
         import datetime
         start = []
         end = []

@@ -10,8 +10,9 @@ class ActionType(enum.Enum):
     CREATE = 0
     EDIT = 1
     DELETE = 2
-    FOLLOW = 3
-    UNFOLLOW = 4
+    REGISTER = 3
+    FOLLOW = 5
+    UNFOLLOW = 6
 
 class ObjectType(enum.Enum):
     USER = 0

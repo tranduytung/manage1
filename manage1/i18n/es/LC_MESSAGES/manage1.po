@@ -6,10 +6,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: manage1 0.1\n"
-"Report-Msgid-Bugs-To: tranduytung1994@gmail.com\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2017-08-17 21:56+0700\n"
-"PO-Revision-Date: 2017-08-17 21:58+0700\n"
-"Last-Translator: FULL NAME <tranduytung1994@gmail.com>\n"
+"PO-Revision-Date: 2017-08-23 14:41+0700\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es\n"
 "Language-Team: es <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
@@ -18,7 +18,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.4.0\n"
 
-#: manage1/controllers/student.py
-msgid "signedin"
-msgstr "Tao moi that bai. Vui long thu lai sau"
+#: manage1/lib/helper
+msgid "course"
+msgstr "course"
+
+#: manage1/lib/helper
+msgid "delete"
+msgstr "delete"
+
+#: manage1/lib/helper
+msgid "at"
+msgstr "at"
+
+#: manage1/lib/helper
+msgid "edit"
+msgstr "edit"
 

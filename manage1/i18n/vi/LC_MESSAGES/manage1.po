@@ -1,27 +1,36 @@
-# Translations template for manage1.
+# Vietnamese translations for manage1.
 # Copyright (C) 2017 ORGANIZATION
 # This file is distributed under the same license as the manage1 project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2017.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: manage1 0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-08-23 14:46+0700\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2017-08-17 21:56+0700\n"
+"PO-Revision-Date: 2017-08-23 14:42+0700\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: vi\n"
+"Language-Team: vi <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.4.0\n"
 
-#: manage1/controllers/student.py:70
-msgid "signedin"
-msgstr ""
+#: manage1/lib/helper
+msgid "course"
+msgstr "khóa học"
 
-#: manage1/lib/helpers.py:68
+#: manage1/lib/helper
+msgid "delete"
+msgstr "xóa"
+
+#: manage1/lib/helper
 msgid "at"
-msgstr ""
+msgstr "lúc"
+
+#: manage1/lib/helper
+msgid "edit"
+msgstr "sửa"
 

@@ -1,20 +1,9 @@
-<!--<% if @activity.any? %>-->
-    <!--<table class="table table-hover">-->
-      <!--<tr>-->
-        <!--<th><%= t :stt %></th>-->
-        <!--<th><%= t :action_content %></th>-->
-        <!--<th><%= t :at_time %></th>-->
-      <!--</tr>-->
-      <!--<%= render @activity %>-->
-    <!--</table>-->
-<!--<% end %>-->
-
-<!--{% if c.activities %}-->
 <div style="width:100%;
     height:80%;
     overflow-y:scroll;">
+    <h3 class="center">Activity</h3>
     <table class="table table-hover">
-        <tbody id="notification">
+        <tbody id="activity">
         {% for activity in c.activities %}
         <tr>
             <td>
@@ -33,4 +22,3 @@
         </tbody>
     </table>
 </div>
-<!--{% endif %}-->

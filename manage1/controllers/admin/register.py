@@ -17,7 +17,7 @@ class RegisterController(BaseController):
     def new(self):
         student_group_id = Session.query(model.Group).filter_by(name='student').first().uid
         c.students = Session.query(model.Users).filter_by(group_id=student_group_id).all()
-        c.courses = Session.query(model.Course).all()
+        c.courses = Session.query(model.Course).filter_by(delete = False).all()
         c.registers = Session.query(model.association_table).all()
         c.model = model
         return render_jinja('/admin/register/new.html')

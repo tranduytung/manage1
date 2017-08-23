@@ -44,7 +44,7 @@ class StudentController(BaseController):
         if request.environ['REMOTE_USER'] == c.student.email or \
                 ('admin' in request.environ['authkit.users'].user_group(request.environ['REMOTE_USER']) and \
                              'admin' not in request.environ['authkit.users'].user_group(c.student.email)):
-            c.courses = Session.query(model.Course).all()
+            c.courses = Session.query(model.Course).filter_by(delete = False).all()
             return render_jinja('/student/show.html')
         else:
             abort(403)

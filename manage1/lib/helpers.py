@@ -14,6 +14,8 @@ from pylons import url
 from webhelpers.pylonslib.flash import Flash as _Flash
 flash = _Flash()
 from pylons import config
+from pylons.i18n.translation import _
+import manage1.model as model
 email_from = 'tranduytung1994@gmail.com'
 email_password = 'tranduytung27011994'
 
@@ -55,3 +57,13 @@ def new_token():
     import random
     import string
     return  ''.join([random.choice(string.ascii_letters + string.digits) for n in xrange(32)])
+
+def notification(activity_id):
+    activity = model.Session.query(model.Activity).filter_by(id=activity_id).first()
+    result = ''
+    result = activity.user.user_info.name+' '+_(activity.action_type.name.lower())+' '+\
+             _(activity.object_type.name.lower())
+    if activity.object_type == model.ObjectType.COURSE:
+        course = model.Session.query(model.Course).filter_by(id=activity.object_id).first()
+        result = result+  ' ' +course.code +' '+ _('at')+' '+ activity.created_at.strftime('%Y/%m/%d - %H:%M')
+    return result

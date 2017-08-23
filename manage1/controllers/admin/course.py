@@ -13,7 +13,7 @@ log = logging.getLogger(__name__)
 class CourseController(BaseController):
 
     def index(self):
-        c.courses = model.Session.query(model.Course).all()
+        c.courses = model.Session.query(model.Course).filter_by(delete = False).all()
         if request.params.has_key('page'):
             page = request.params['page']
         else:

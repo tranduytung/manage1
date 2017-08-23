@@ -24,8 +24,21 @@
       <ul class="nav navbar-nav navbar-right">
         <li><a href="{{h.url(controller='search',action='course')}}">Search Course</a></li>
         <li><a href="{{h.url(controller='search',action='student')}}">Search Student</a></li>
+          <li class="dropdown">
+          {% if h.auth.authorized(h.auth.is_valid_user) and not (
+               request.urlvars['controller'] == 'account' and request.urlvars['action'] == 'signout') %}
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  {{c.notifications.filter(c.model.Notification.is_read == False).all()|length}}
+                  <b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu" style="width: 200px; background: #e9ebee">
+                  {% for notification in c.notifications %}
+                    <li class="border">{{h.notification(notification.activity_id)}}</li>
+                  {% endfor %}
+              </ul>
+          {% endif %}
+        </li>
         <li class="dropdown">
-
           {% if h.auth.authorized(h.auth.is_valid_user) and not (
                request.urlvars['controller'] == 'account' and request.urlvars['action'] == 'signout') %}
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{request.environ['REMOTE_USER']}}<b class="caret"></b></a>
@@ -33,15 +46,23 @@
                 <li><a href="{{h.url('signout')}}">Sign out</a></li>
                 <li class="divider"></li>
                 <li><a href="{{h.url('signedin')}}">Signed in</a></li>
+              </ul>
           {% else %}
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
               <ul class="dropdown-menu">
                 <li><a href="{{h.url('signup')}}">Sign up</a></li>
                 <li><a href="{{h.url('signin')}}">Sign in</a></li>
+              </ul>
             {% endif %}
-          </ul>
+        </li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{session['language']}}<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+                <li><a href="{{h.url(controller='language',action='choose',language='vi')}}">VI</a></li>
+                <li><a href="{{h.url(controller='language',action='choose',language='es')}}">EN</a></li>
+            </ul>
         </li>
       </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
+    </div>
+  </div>
 </nav>

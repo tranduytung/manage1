@@ -18,7 +18,6 @@ log = logging.getLogger(__name__)
 
 
 class CourseController(BaseController):
-
     def index(self):
         c.courses = Session.query(model.Course).filter_by(delete=False).all()
         if request.params.has_key('page'):
@@ -27,7 +26,6 @@ class CourseController(BaseController):
             page = 1
         c.courses = paginate.Page(c.courses, page=page, items_per_page=10)
         return render_jinja('/course/index.html')
-
 
     def show(self, id):
         c.course = Session.query(model.Course).filter_by(id=id).first()
@@ -94,6 +92,12 @@ class CourseController(BaseController):
                                       object_id=course.id,
                                       object_type=model.ObjectType.COURSE)
             remote_user.activities.append(activity)
+            self.__activity_pusher(remote_user.user_info.name,
+                                   action=activity.action_type.name,
+                                   object_name=course.code,
+                                   object_type=activity.object_type.name,
+                                   time=activity.created_at.strftime('%Y/%m/%d - %H:%M'),
+                                   object_id=course.id)
             Session.commit()
             h.flash('Edit thanh cong', 'success')
             return redirect(url(controller='course', action='index'))
@@ -103,24 +107,40 @@ class CourseController(BaseController):
         course = Session.query(model.Course).filter_by(id=id, delete=False).first()
         if not course:
             abort(404, '404 Not Found')
-        remote_user = model.Session.query(model.Users).\
+        remote_user = model.Session.query(model.Users). \
             filter_by(email=request.environ['REMOTE_USER']).first()
+        # new activity
         activity = model.Activity(action_type=model.ActionType.DELETE,
                                   object_id=course.id,
                                   object_type=model.ObjectType.COURSE)
         remote_user.activities.append(activity)
-        self.__add_pusher(remote_user.user_info.name,
-                          action= activity.action_type.name,
-                          object_name= course.code,
-                          object_type = activity.object_type.name,
-                          time= activity.created_at.strftime('%Y/%m/%d - %H:%M'),
-                          object_id = course.id)
+
+        # activity pusher
+        self.__activity_pusher(remote_user.user_info.name,
+                               action=activity.action_type.name,
+                               object_name=course.code,
+                               object_type=activity.object_type.name,
+                               time=activity.created_at.strftime('%Y/%m/%d - %H:%M'),
+                               object_id=course.id)
+
+        # new notification
+        notification = model.Notification(activity_id=activity.id)
+        for user in course.users:
+            user.notifications.append(notification)
+            self.__notification_pusher(remote_user.user_info.name,
+                                       action=activity.action_type.name,
+                                       object_name=course.code,
+                                       object_type=activity.object_type.name,
+                                       time=activity.created_at.strftime('%Y/%m/%d - %H:%M'),
+                                       object_id=course.id,
+                                       user_id= user.id)
+
         course.delete = True
         Session.commit()
         h.flash('Xoa course thanh cong', 'success')
         return redirect(h.url(controller='course', action='index'))
 
-    def __add_pusher(self, user_name, action, object_name, object_type, time, object_id):
+    def __activity_pusher(self, user_name, action, object_name, object_type, time, object_id):
         import pusher
 
         pusher_client = pusher.Pusher(
@@ -137,4 +157,24 @@ class CourseController(BaseController):
                                'object_type': object_type,
                                'time': time,
                                'object_id': object_id
+                               })
+
+    def __notification_pusher(self, user_name, action, object_name, object_type, time, object_id, user_id):
+        import pusher
+
+        pusher_client = pusher.Pusher(
+            app_id='384245',
+            key='15e72d442d16f43e033c',
+            secret='f09b4384a0341259dbbd',
+            cluster='ap1',
+            ssl=True
+        )
+        pusher_client.trigger('my-channel', 'notification',
+                              {'user_name': user_name,
+                               'action': action,
+                               'object_name': object_name,
+                               'object_type': object_type,
+                               'time': time,
+                               'object_id': object_id,
+                               'user_id': user_id
                                })

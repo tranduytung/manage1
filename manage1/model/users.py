@@ -18,6 +18,7 @@ class Users(Base):
                            secondary='association',
                            backref="users")
     activities = relationship("Activity", backref="user")
+    notifications = relationship("Notification", backref="user", lazy='dynamic')
 
     def __repr__(self):
         return "<User ('%s')" % self.email

@@ -31,12 +31,21 @@
 
             var channel = pusher.subscribe('my-channel');
             channel.bind('my-event', function(data) {
-                $('#notification').prepend( "<tr><td>"+data.user_name+" "+data.action.toLowerCase()+
+                $('#activity').prepend( "<tr><td>"+data.user_name+" "+data.action.toLowerCase()+
                 " "+data.object_type.toLowerCase()+" "+data.object_name+"</td><td>"+data.time+"</td></tr>");
                 if(data.object_type == 'COURSE'){
                     $('#course-'+data.object_id).remove();
                 }
             });
+
+            <!--var pusher = new Pusher('15e72d442d16f43e033c', {-->
+              <!--authEndpoint: '/student/pusher_auth',-->
+              <!--auth: {-->
+                <!--headers: {-->
+                  <!--'X-CSRF-Token': 'asasasa'-->
+                <!--}-->
+              <!--}-->
+            <!--});-->
         </script>
     </head>
     <body>
