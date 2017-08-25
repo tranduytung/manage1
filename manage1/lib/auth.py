@@ -11,6 +11,7 @@ has_edit_role = HasAuthKitRole(['editor'])
 has_admin_role = HasAuthKitRole('admin')
 remote_user = RemoteUser()
 user_in = UserIn
+
 def render_signin():
     result = render_jinja('/derived/account/signin.html')
     return result

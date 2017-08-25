@@ -154,3 +154,9 @@ uploader {
 .border {
   border: 1px solid grey;
 }
+
+.activity{
+    width:100%;
+    height:80%;
+    overflow-y:scroll;
+}
